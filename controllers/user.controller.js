@@ -1,6 +1,6 @@
 const { response, request } = require("express");
+const { hashPassword } = require("../helpers/db-validators");
 
-const bcryptjs = require("bcryptjs");
 const User = require("../models/user");
 
 const userGet = (req = request, res = response) => {
@@ -28,8 +28,7 @@ const userPost = async (req = request, res) => {
     });
 
     // Hashear contraseña
-    const salt = bcryptjs.genSaltSync();
-    user.password = bcryptjs.hashSync(password, salt);
+    user.password = hashPassword(password);
 
     // Guardar en BD
     await user.save().then((user) => {
@@ -47,27 +46,30 @@ const userPost = async (req = request, res) => {
   }
 };
 
-const userPut = (req = request, res) => {
+const userPut = async (req = request, res = response) => {
   const { id } = req.params;
+  // Defragment for excluding form normal validation
+  const { password, google, email, ...other } = req.body;
+
+  // @TODO: validar contra base de datos
+
+  // Wants to change it's own password
+  if (password) {
+    other.password = hashPassword(password);
+  }
+
+  // get the user and update
+  const user = await User.findByIdAndUpdate(id, other, { new: true });
 
   res.json({
-    ok: true,
-    msg: "put API - controlador",
-    id,
+    user,
   });
 };
 
-const userDelete = (req, res) => {
+const userDelete = (req = request, res = response) => {
   res.json({
     ok: true,
     msg: "delete API - controlador",
-  });
-};
-
-const userPatch = (req, res) => {
-  res.json({
-    ok: true,
-    msg: "patch API - controlador",
   });
 };
 
@@ -76,5 +78,4 @@ module.exports = {
   userPost,
   userPut,
   userDelete,
-  userPatch,
 };
