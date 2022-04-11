@@ -27,17 +27,6 @@ const userPost = async (req = request, res) => {
       password,
     });
 
-    // Verificar corre
-    const existeEmail = await User.findOne({ email }).exec();
-
-    if (existeEmail) {
-      console.log(existeEmail);
-      return res.status(400).json({
-        ok: false,
-        msg: "El correo ya está registrado.",
-      });
-    }
-
     // Hashear contraseña
     const salt = bcryptjs.genSaltSync();
     user.password = bcryptjs.hashSync(password, salt);

@@ -1,4 +1,5 @@
 const Role = require("../models/role");
+const User = require("../models/user");
 
 /**
  * Middleware to check if the role name exists on database
@@ -12,6 +13,15 @@ const isValidRole = async (name = "") => {
   }
 };
 
+const emailExists = async (email = "") => {
+  const existeEmail = await User.findOne({ email });
+
+  if (existeEmail) {
+    throw new Error(`El email '${email}', ya está registrado.`);
+  }
+};
+
 module.exports = {
   isValidRole,
+  emailExists,
 };
