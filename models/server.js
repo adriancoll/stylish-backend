@@ -1,38 +1,46 @@
-const express = require('express');
-const cors = require('cors');
+const express = require("express");
+const cors = require("cors");
+const { dbConnection } = require("../database/config");
 
 class Server {
-    constructor() {
-        this.app = express();
-        this.port = process.env.PORT;
-        this.usuariosRoutePath = '/api/user';
+  constructor() {
+    this.app = express();
+    this.port = process.env.PORT;
+    this.usuariosRoutePath = "/api/user";
 
-        //Middlewares
-        this.middlewares();
+    //conectar base de datos
+    this.conectarDB();
 
-        this.routes();
-    }
+    //Middlewares
+    this.middlewares();
 
-    middlewares() {
-        // Política de CORS
-        this.app.use(cors());
+    this.routes();
+  }
 
-        // Lectura y parseo del body a JSON
-        this.app.use( express.json() );
+  async conectarDB() {
+    await dbConnection();
+  }
 
-        //Directorio publico
-        this.app.use(express.static('public'));
-    }
+  middlewares() {
+    // Política de CORS
+    this.app.use(cors());
 
-    routes() {
-        this.app.use(this.usuariosRoutePath, require('../routes/user.routes'));
-    }
+    // Lectura y parseo del body a JSON
+    this.app.use(express.json());
 
-    listen() {
-        this.app.listen(this.port, () => {
-            console.log(`Servidor corriendo en puerto ${this.port}`)
-        });
-    }
+    //Directorio publico
+    this.app.use(express.static("public"));
+  }
+
+  routes() {
+    this.app.use(this.usuariosRoutePath, require("../routes/user.routes"));
+  }
+
+  listen() {
+    this.app.listen(this.port, () => {
+      console.log(`Servidor corriendo en puerto ${this.port}`);
+    });
+  }
 }
 
 module.exports = Server;
