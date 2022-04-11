@@ -1,3 +1,5 @@
+const bcryptjs = require("bcryptjs");
+
 const Role = require("../models/role");
 const User = require("../models/user");
 
@@ -21,7 +23,10 @@ const emailExists = async (email = "") => {
   }
 };
 
+const hashPassword = (pwd) => bcryptjs.hashSync(pwd, bcryptjs.genSaltSync());
+
 module.exports = {
   isValidRole,
   emailExists,
+  hashPassword
 };
