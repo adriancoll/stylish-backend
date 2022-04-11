@@ -1,61 +1,61 @@
-const { response, request } = require('express');
-
+const { response, request } = require("express");
 
 const userGet = (req = request, res = response) => {
+  const { nombre = "No Name", apikey, page = 1, limit = 10 } = req.query;
 
-    const {nombre = 'No Name', apikey, page = 1, limit = 10} = req.query;
+  console.log(req)
 
-    res.json({
-        ok: true,
-        msg: 'get API - controlador',
-        nombre,
-        apikey,
-        page,
-        limit
-    });
-}
+  res.json({
+    ok: true,
+    msg: "get API - controlador",
+    nombre,
+    apikey,
+    page,
+    limit,
+  });
+};
 
 const userPost = (req = request, res) => {
+  const { nombre, edad } = req.body;
 
-    const {nombre, edad} = req.body;
-
-    res.status(201).json({
-        ok: true,
-        msg: 'post API - controlador',
-        nombre,
-        edad
-    });
-}
+  console.clear()
+  
+  res.status(201).json({
+    ok: true,
+    msg: "post API - controlador",
+    nombre,
+    edad,
+  });
+};
 
 const userPut = (req = request, res) => {
+  const { id } = req.params;
 
-    const { id } = req.params;
-
-    res.json({
-        ok: true,
-        msg: 'put API - controlador',
-        id
-    });
-}
+  res.json({
+    ok: true,
+    msg: "put API - controlador",
+    id,
+  });
+};
 
 const userDelete = (req, res) => {
-    res.json({
-        ok: true,
-        msg: 'delete API - controlador'
-    });
-}
+  res.json({
+    ok: true,
+    msg: "delete API - controlador",
+  });
+};
 
 const userPatch = (req, res) => {
-    res.json({
-        ok: true,
-        msg: 'patch API - controlador'
-    });
-}
+  res.json({
+    ok: true,
+    msg: "patch API - controlador",
+  });
+};
 
 module.exports = {
-    userGet,
-    userPost,
-    userPut,
-    userDelete,
-    userPatch
-}
+  userGet,
+  userPost,
+  userPut,
+  userDelete,
+  userPatch,
+};
