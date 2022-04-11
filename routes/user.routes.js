@@ -8,9 +8,8 @@ const {
   userPut,
   userPost,
   userDelete,
-  userPatch,
 } = require("../controllers/user.controller");
-const { isValidRole } = require("../helpers/db-validators");
+const { isValidRole, emailExists } = require("../helpers/db-validators");
 
 const router = Router();
 
@@ -25,6 +24,7 @@ router.post(
     check("password", "La contraseña debe tener más de 6 letras.").isLength({
       min: 6,
     }),
+    check("email").custom(emailExists),
     check("role").custom(isValidRole),
     check("email", "El correo no es válido.").isEmail(),
     crudValidator,
@@ -33,7 +33,5 @@ router.post(
 );
 
 router.delete("/", userDelete);
-
-router.patch("/", userPatch);
 
 module.exports = router;
