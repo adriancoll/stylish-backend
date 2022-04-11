@@ -14,10 +14,10 @@ class Server {
     }
 
     middlewares() {
-        //CORS
+        // Política de CORS
         this.app.use(cors());
 
-        //Lectura y parseo del body
+        // Lectura y parseo del body a JSON
         this.app.use( express.json() );
 
         //Directorio publico

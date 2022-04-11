@@ -3,8 +3,6 @@ const { response, request } = require("express");
 const userGet = (req = request, res = response) => {
   const { nombre = "No Name", apikey, page = 1, limit = 10 } = req.query;
 
-  console.log(req)
-
   res.json({
     ok: true,
     msg: "get API - controlador",
@@ -18,8 +16,6 @@ const userGet = (req = request, res = response) => {
 const userPost = (req = request, res) => {
   const { nombre, edad } = req.body;
 
-  console.clear()
-  
   res.status(201).json({
     ok: true,
     msg: "post API - controlador",
