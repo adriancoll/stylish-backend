@@ -18,7 +18,7 @@ const {
 
 const router = Router();
 
-router.get("/", userGet);
+router.post("/all", userGet);
 
 router.put(
   "/:id",
@@ -46,6 +46,14 @@ router.post(
   userPost
 );
 
-router.delete("/", userDelete);
+router.delete(
+  "/:id",
+  [
+    check("id", "No es un id válido").isMongoId(),
+    check("id").custom(userExists),
+    crudValidator
+  ],
+  userDelete
+);
 
 module.exports = router;
