@@ -23,11 +23,13 @@ const emailExists = async (email = "") => {
   }
 };
 
-const userExists = async (id = "") => {
-  const exists = await User.findById(id);
-
-  if (exists) {
-    throw new Error(`El usuario con id: '${id}', no existe.`);
+const userExists = async (id) => {
+  if (id.match(/^[0-9a-fA-F]{24}$/)) {
+    // Yes, it's a valid ObjectId, proceed with `findById` call.
+    const exists = await User.findById(id);
+    if (!exists) {
+      throw new Error(`El usuario con id: '${id}', no existe.`);
+    }
   }
 };
 
@@ -37,5 +39,5 @@ module.exports = {
   isValidRole,
   emailExists,
   hashPassword,
-  userExists
+  userExists,
 };
