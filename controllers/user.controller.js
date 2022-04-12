@@ -48,10 +48,9 @@ const userPost = async (req = request, res) => {
 
 const userPut = async (req = request, res = response) => {
   const { id } = req.params;
-  // Defragment for excluding form normal validation
-  const { password, google, email, ...other } = req.body;
 
-  // @TODO: validar contra base de datos
+  // Defragment for excluding form normal validation
+  const { _id, password, google, email, ...other } = req.body;
 
   // Wants to change it's own password
   if (password) {
