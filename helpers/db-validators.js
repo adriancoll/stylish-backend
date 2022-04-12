@@ -23,10 +23,19 @@ const emailExists = async (email = "") => {
   }
 };
 
+const userExists = async (id = "") => {
+  const exists = await User.findById(id);
+
+  if (exists) {
+    throw new Error(`El usuario con id: '${id}', no existe.`);
+  }
+};
+
 const hashPassword = (pwd) => bcryptjs.hashSync(pwd, bcryptjs.genSaltSync());
 
 module.exports = {
   isValidRole,
   emailExists,
-  hashPassword
+  hashPassword,
+  userExists
 };
