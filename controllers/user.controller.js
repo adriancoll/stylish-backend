@@ -3,16 +3,22 @@ const { hashPassword } = require("../helpers/db-validators");
 
 const User = require("../models/user");
 
-const userGet = (req = request, res = response) => {
-  const { nombre = "No Name", apikey, page = 1, limit = 10 } = req.query;
+const userGet = async (req = request, res = response) => {
+  const {
+    options: { limit = 5, from = 0 },
+  } = req.body;
+
+  const query = { status: true };
+
+  // Non blocking, executed simultaneously
+  const [users, total] = await Promise.all([
+    User.find(query).skip(Number(from)).limit(Number(limit)),
+    User.countDocuments(query),
+  ]);
 
   res.json({
-    ok: true,
-    msg: "get API - controlador",
-    nombre,
-    apikey,
-    page,
-    limit,
+    total,
+    users,
   });
 };
 
@@ -34,15 +40,14 @@ const userPost = async (req = request, res) => {
     await user.save().then((user) => {
       res.status(201).json({
         ok: true,
-        msg: "post API - controlador",
         user,
       });
     });
   } catch (error) {
     res.status(500).json({
       ok: false,
+      error,
     });
-    console.log(error);
   }
 };
 
@@ -65,10 +70,20 @@ const userPut = async (req = request, res = response) => {
   });
 };
 
-const userDelete = (req = request, res = response) => {
+const userDelete = async (req = request, res = response) => {
+  const { id } = req.params;
+
+  const user = await User.findByIdAndUpdate(
+    id,
+    {
+      status: false,
+    },
+    { new: true }
+  );
+
   res.json({
     ok: true,
-    msg: "delete API - controlador",
+    user,
   });
 };
 
