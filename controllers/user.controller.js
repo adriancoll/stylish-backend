@@ -1,7 +1,7 @@
 const { response, request } = require("express");
 const { hashPassword } = require("../helpers/db-validators");
 
-const User = require("../models/user");
+const User = require("../models/user.model");
 
 const userGet = async (req = request, res = response) => {
   const {

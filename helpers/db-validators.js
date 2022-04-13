@@ -1,7 +1,7 @@
 const bcryptjs = require("bcryptjs");
 
 const Role = require("../models/role");
-const User = require("../models/user");
+const User = require("../models/user.model");
 
 /**
  * Middleware to check if the role name exists on database
