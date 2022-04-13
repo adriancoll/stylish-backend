@@ -33,9 +33,11 @@ const UserSchema = new Schema({
   },
 });
 
-UserSchema.methods.toJSON = function() {
-  const { __v, password, ...user } = this.toObject();
+// Modify the model we get when we query any user to abstract some useless data for frontend
+UserSchema.methods.toJSON = function () {
+  const { __v, password, _id, ...user } = this.toObject();
+  user.uid = _id;
   return user
-}
+};
 
 module.exports = model("User", UserSchema);

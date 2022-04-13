@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const { dbConnection } = require("../database/config");
+const { validateJWT } = require("../middlewares/jwt-validator");
 
 class Server {
   constructor() {
@@ -36,7 +37,7 @@ class Server {
 
   routes() {
     this.app.use(this.authPath, require("../routes/auth.routes"));
-    this.app.use(this.usuariosRoutePath, require("../routes/user.routes"));
+    this.app.use(this.usuariosRoutePath, validateJWT, require("../routes/user.routes"));
   }
 
   listen() {

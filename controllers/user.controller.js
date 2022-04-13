@@ -73,6 +73,8 @@ const userPut = async (req = request, res = response) => {
 const userDelete = async (req = request, res = response) => {
   const { id } = req.params;
 
+  const authUser = req.user;
+
   const user = await User.findByIdAndUpdate(
     id,
     {
@@ -84,6 +86,7 @@ const userDelete = async (req = request, res = response) => {
   res.json({
     ok: true,
     user,
+    authUser
   });
 };
 
