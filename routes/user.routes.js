@@ -14,7 +14,7 @@ const {
   userExists,
 } = require("../helpers/db-validators");
 
-const { hasRole, crudValidator, isAdminRole } = require("../middlewares");
+const { crudValidator, isAdminRole } = require("../middlewares");
 
 const router = Router();
 
@@ -34,7 +34,6 @@ router.put(
 router.post(
   "/",
   [
-    isAdminRole,
     check("name", "El nombre es obligatorio.").not().isEmpty(),
     check("password", "La contraseña debe tener más de 6 letras.").isLength({
       min: 6,
@@ -50,7 +49,7 @@ router.post(
 router.delete(
   "/:id",
   [
-    hasRole("ADMIN_ROLE"),
+    isAdminRole,
     check("id", "No es un id válido").isMongoId(),
     check("id").custom(userExists),
     crudValidator,
