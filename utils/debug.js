@@ -2,15 +2,14 @@ const colors = require("colors");
 const prefix = "[stylish-backend] - ";
 
 colors.setTheme({
-  input: "grey",
-  info: ["cyan", "italic"],
-  prompt: "grey",
-  success: ["green", "bold"],
-  data: "grey",
-  help: "cyan",
-  warn: "yellow",
-  debug: "blue",
-  error: ["red", "underline"],
+  input   : "grey",
+  info    : ["cyan", "italic"],
+  prompt  : "grey",
+  success : ["green", "bold"],
+  data    : "grey",
+  warn    : "yellow",
+  debug   : "blue",
+  error   : ["red", "underline"],
 });
 
 const debug = (message = "", type = "info", hasPrefix = true) => {
@@ -23,8 +22,11 @@ const debug = (message = "", type = "info", hasPrefix = true) => {
     case "error":
       console.log(message.error);
       break;
+    case "warn":
+      console.log(message.warn);
+      break;
     case "rainbow":
-      console.log(message.rainbow);
+      console.log(message.rainbow.bold);
       break;
     case "info":
     default:
