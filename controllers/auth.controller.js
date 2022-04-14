@@ -44,7 +44,7 @@ const login = async (req, res) => {
       token,
     });
   } catch (ex) {
-    console.error(ex);
+    debug(ex, "error");
     res.status(500).json({
       msg: "Ha habido un error",
     });

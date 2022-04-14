@@ -4,6 +4,10 @@ const generateJWT = (uid = "") => {
   return new Promise((resolve, reject) => {
     const payload = { uid };
 
+    if (!process.env.SECRETORPRIVATEKEY) {
+      reject("No se a encontrado un la variable de entorno que contiene el JWTSecret...");
+    }
+
     jwt.sign(
       payload,
       process.env.SECRETORPRIVATEKEY,
@@ -12,7 +16,7 @@ const generateJWT = (uid = "") => {
       },
       (err, token) => {
         if (err) {
-          console.error(err);
+          debug(err);
           reject("No se pudo generar el token");
           return;
         }

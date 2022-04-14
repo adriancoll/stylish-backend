@@ -1,12 +1,13 @@
 const mongoose = require("mongoose");
+const debug = require('../utils/debug')
 
 const dbConnection = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_CNN);
 
-    console.log("BASE DE DATOS ONLINE!");
+    debug("Conexión de base de datos establecida", "success");
   } catch (error) {
-    console.log(error);
+    debug(error, "error");
     throw new Error("Error al inicializar la base de datos en mongodb.");
   }
 };

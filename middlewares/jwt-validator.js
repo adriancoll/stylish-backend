@@ -37,7 +37,7 @@ const validateJWT = async (req = request, res = response, next) => {
     next();
   } catch (ex) {
     // if jwt.verify() throws the error reject the request
-    console.error(typeof ex);
+    debug(ex, "error");
     return res.status(401).json({
       msg: "Token inválido o su sesión a expirado.",
     });

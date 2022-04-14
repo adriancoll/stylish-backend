@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const { dbConnection } = require("../database/config");
 const { validateJWT } = require("../middlewares/jwt-validator");
+const debug = require('../utils/debug')
 
 class Server {
   constructor() {
@@ -42,7 +43,7 @@ class Server {
 
   listen() {
     this.app.listen(this.port, () => {
-      console.log(`Servidor corriendo en puerto ${this.port}`);
+      debug(`Servidor corriendo en puerto ${this.port}`, "rainbow");
     });
   }
 }
