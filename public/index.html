@@ -1,15 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Google SignIn</title>
+  </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso denegado</title>
-</head>
+  <body>
+    <h1>Google SignIn</h1>
+    <div
+      id="g_id_onload"
+      data-client_id="577661903302-l069dsm6392c44n67tho34t0gnrv8nhp.apps.googleusercontent.com"
+      data-auto_prompt="true"
+      data-callback="handleCredentialResponse"
+    ></div>
+    <div
+      class="g_id_signin"
+      data-type="standard"
+      data-size="large"
+      data-theme="outline"
+      data-text="sign_in_with"
+      data-shape="rectangular"
+      data-logo_alignment="left"
+    ></div>
 
-<body>
-    <h1>Acceso denegado</h1>
-</body>
+    <button id="google-signout">SignOut</button>
 
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+      // @TODO: NATIVE
+        function handleCredentialResponse(response) {
+
+          const payload = {
+            id_token: response.credential
+          }
+
+          
+          fetch("http://localhost:8080/api/auth/google", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+          })
+            .then((response) => response.json())
+            .then((response) => {
+              localStorage.setItem('email', response.user.email )
+            });
+        }
+    
+        const button = document.getElementById('google-signout')
+
+        button.onclick = (event) => {
+          console.log(google.accounts.id)
+
+          google.accounts.id.revoke( localStorage.getItem('email'), success => {
+            console.log("asdasdsad")
+            localStorage.clear()
+            location.reload()
+          })
+        }
+    </script>
+  </body>
 </html>

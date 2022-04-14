@@ -24,13 +24,14 @@ const userGet = async (req = request, res = response) => {
 
 const userPost = async (req = request, res) => {
   try {
-    const { name, email, role, password } = req.body;
+    const { name, email, role, password, image } = req.body;
 
     const user = new User({
       name,
       email,
       role,
       password,
+      image
     });
 
     // Hashear contraseña
