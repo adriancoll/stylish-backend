@@ -29,6 +29,7 @@
 
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
+      const BASE_URL = window.location.hostname.includes('localhost') ? 'http://localhost:8080' : 'https://stylish-backend.herokuapp.com'
       // @TODO: NATIVE
         function handleCredentialResponse(response) {
 
@@ -37,7 +38,7 @@
           }
 
           
-          fetch("http://localhost:8080/api/auth/google", {
+          fetch(`${BASE_URL}/api/auth/google`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
