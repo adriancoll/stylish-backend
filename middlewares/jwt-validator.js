@@ -1,4 +1,5 @@
 const { response, request, json } = require("express");
+const debug = require('../utils/debug')
 const jwt = require("jsonwebtoken");
 const User = require("../models/user.model");
 
@@ -37,7 +38,7 @@ const validateJWT = async (req = request, res = response, next) => {
     next();
   } catch (ex) {
     // if jwt.verify() throws the error reject the request
-    debug(ex, "error");
+    debug(ex.message, "error");
     return res.status(401).json({
       msg: "Token inválido o su sesión a expirado.",
     });
