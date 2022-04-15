@@ -9,8 +9,9 @@ class Server {
     this.app = express();
     this.port = process.env.PORT;
 
-    this.usuariosRoutePath = "/api/user";
-    this.authPath          = "/api/auth";
+    this.usuariosRoutePath    = "/api/user";
+    this.serviceTypeRoutePath = "/api/service/type";
+    this.authPath             = "/api/auth";
 
     //conectar base de datos
     this.conectarDB();
@@ -39,6 +40,7 @@ class Server {
   routes() {
     this.app.use(this.authPath, require("../routes/auth.routes"));
     this.app.use(this.usuariosRoutePath, validateJWT, require("../routes/user.routes"));
+    this.app.use(this.serviceTypeRoutePath, require("../routes/service-type.routes"));
   }
 
   listen() {
