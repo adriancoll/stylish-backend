@@ -4,6 +4,7 @@ const debug = require("../../utils/debug");
 const ServiceType = require("../../models/services/service-type.model");
 
 const getAllServiceType = async (req = request, res = response) => {
+  // change to middleware
   // const options = {
   //   status: true
   // }
