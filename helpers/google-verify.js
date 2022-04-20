@@ -16,8 +16,6 @@ async function googleVerify(token = "") {
 
   const { given_name, family_name, picture, email } = ticket.getPayload();
 
-  debug(`El usuario ${email} ha iniciado sesión con la API de Google...`, "info")
-
   return {
     name: `${given_name} ${family_name}`,
     image: picture,
