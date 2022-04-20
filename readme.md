@@ -12,10 +12,23 @@
 npm install
 ```
 
-Once the installations are finished, you must start the node server with the following command.
++ Once the installations are finished, you must generate the **JWTSecret key** the following command.
+
++ And then copy the key to the `.env` file on the `JWTSECRET` env variabe.
+```
+npm run secret:generate
+```
+
++ Then you need to generate the Google Oauth2 client id and secret. On Google developer console. And then copy the keys to the `.env` file on the `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` env variables.
+
++ You need to create the mongo database and paste the connection to the `.env` file on the `MONGODB_URI` env variable.
+
+<br>
+
+When that's done, you can run the server with the following command.
 
 ```
-nodemon app
+npm run dev
 ```
 
 <br>
