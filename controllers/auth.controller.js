@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const { request, response } = require("express");
 const { generateJWT } = require("../helpers/generate-jwt");
 const { googleVerify } = require("../helpers/google-verify");
+const debug = require('../utils/debug')
 
 const User = require("../models/user.model");
 
@@ -60,6 +61,9 @@ const googleSignIn = async (req = request, res = response) => {
     let user = await User.findOne({ email });
 
     if (!user) {
+      /**
+       * @TODO Hacer formulario de contraseña y no dejar string
+       */
       const data = {
         name,
         email,
@@ -70,10 +74,10 @@ const googleSignIn = async (req = request, res = response) => {
 
       user = new User(data);
       await user.save();
-      console.log(data, user);
+      debug(`Se ha creado el usuario ${email} a través de google.`, "info")
     }
 
-    // if user is bloqued
+    // if user is bloqued 
     if (!user.status) {
       return res.status(401).json({
         msg: "Usuario bloqueado, habla con un administrador.",

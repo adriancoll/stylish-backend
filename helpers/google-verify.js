@@ -1,10 +1,12 @@
 const { OAuth2Client } = require("google-auth-library");
+const debug = require('../utils/debug')
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 async function googleVerify(token = "") {
   if (!process.env.GOOGLE_CLIENT_ID) {
-    throw new Error("Missing JWT_SECRET. Refusing to authenticate");
+    debug("NO tienes un GOOGLE_CLIENT en el .env.", "error")
+    throw new Error("NO tienes un GOOGLE_CLIENT en el .env.");
   }
 
   const ticket = await client.verifyIdToken({
@@ -14,7 +16,7 @@ async function googleVerify(token = "") {
 
   const { given_name, family_name, picture, email } = ticket.getPayload();
 
-  console.log(ticket.getPayload());
+  debug(`El usuario ${email} ha iniciado sesión con la API de Google...`, "info")
 
   return {
     name: `${given_name} ${family_name}`,

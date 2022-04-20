@@ -2,17 +2,19 @@ const colors = require("colors");
 const prefix = "[stylish-backend] - ";
 
 colors.setTheme({
-  input   : "grey",
-  info    : ["cyan", "italic"],
-  prompt  : "grey",
-  success : ["green", "bold"],
-  data    : "grey",
-  warn    : "yellow",
-  debug   : "blue",
-  error   : ["red", "underline"],
+  input: "grey",
+  info: ["cyan", "italic"],
+  prompt: "grey",
+  success: ["green", "bold"],
+  data: "grey",
+  warn: "yellow",
+  debug: "blue",
+  error: ["red", "underline"],
 });
 
 const debug = (message = "", type = "info", hasPrefix = true) => {
+  if (process.env.NODE_ENV === "production")  return;
+
   message = hasPrefix ? `${prefix} ${message}` : message;
 
   switch (type) {

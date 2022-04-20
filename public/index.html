@@ -54,10 +54,7 @@
         const button = document.getElementById('google-signout')
 
         button.onclick = (event) => {
-          console.log(google.accounts.id)
-
           google.accounts.id.revoke( localStorage.getItem('email'), success => {
-            console.log("asdasdsad")
             localStorage.clear()
             location.reload()
           })
