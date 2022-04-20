@@ -15,7 +15,7 @@ const validateJWT = async (req = request, res = response, next) => {
 
   try {
     // get uid from token if valid
-    const { uid } = jwt.verify(token, process.env.SECRETORPRIVATEKEY);
+    const { uid } = jwt.verify(token, process.env.JWTSECRET);
 
     // store the auth user on the request
     const user = await User.findById(uid);
