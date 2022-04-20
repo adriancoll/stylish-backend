@@ -31,18 +31,17 @@ const userPost = async (req = request, res) => {
       email,
       role,
       password,
-      image
+      image,
     });
 
     // Hashear contraseña
     user.password = hashPassword(password);
 
     // Guardar en BD
-    await user.save().then((user) => {
-      res.status(201).json({
-        ok: true,
-        user,
-      });
+    const savedUser = await user.save();
+    res.status(201).json({
+      ok: true,
+      user: savedUser,
     });
   } catch (error) {
     res.status(500).json({
@@ -87,7 +86,7 @@ const userDelete = async (req = request, res = response) => {
   res.json({
     ok: true,
     user,
-    authUser
+    authUser,
   });
 };
 
