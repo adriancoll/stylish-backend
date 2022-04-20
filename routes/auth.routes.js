@@ -7,8 +7,8 @@ const { login, googleSignIn } = require("../controllers/auth.controller");
 const router = Router();
 
 router.post('/login', [
-    check('email', 'El correo es obligatorio para iniciar sesión').isEmail(),
-    check('password', 'Debes introducir una contraseña').not().isEmpty(),
+    check('email', 'El correo es obligatorio para iniciar sesión').isEmail().normalizeEmail(),
+    check('password', 'Debes introducir una contraseña').not().isEmpty().trim(),
     crudValidator
 ], login)
 
