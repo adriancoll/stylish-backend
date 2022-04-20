@@ -4,13 +4,13 @@ const generateJWT = (uid = "") => {
   return new Promise((resolve, reject) => {
     const payload = { uid };
 
-    if (!process.env.SECRETORPRIVATEKEY) {
+    if (!process.env.JWTSECRET) {
       reject("No se a encontrado un la variable de entorno que contiene el JWTSecret...");
     }
 
     jwt.sign(
       payload,
-      process.env.SECRETORPRIVATEKEY,
+      process.env.JWTSECRET,
       {
         expiresIn: "7d",
       },
