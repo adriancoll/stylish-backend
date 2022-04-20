@@ -11,13 +11,21 @@ const debug = require("../utils/debug");
  * @param {String} name name of the role to validate
  */
 const isValidRole = async (name = "") => {
+  if (name === "ADMIN_ROLE") {
+    throw new Error(`No se puede crear un usuario con el rol ${name}.`);
+  }
+
   const existeRol = await Role.findOne({ name });
 
   if (!existeRol) {
-    throw new Error(`El rol ${name} no está registrado en la base de datos.`);
+    throw new Error(`El rol '${name}' no está registrado en la base de datos.`);
   }
 };
 
+/**
+ * Middleware to check if the email exists on database
+ * @param {String} email to validate
+ */
 const emailExists = async (email = "") => {
   const existeEmail = await User.findOne({ email });
 
@@ -26,13 +34,17 @@ const emailExists = async (email = "") => {
   }
 };
 
+/**
+ * Middleware to check if the user exists on database
+ * @param {Number} id id of the user to validate
+ */
 const userExists = async (id) => {
   if (id.match(/^[0-9a-fA-F]{24}$/)) {
     // Yes, it's a valid ObjectId, proceed with `findById` call.
     const exists = await User.findById(id);
-    if (!exists) {
-      debug(`El usuario con id: '${id}', no existe.`, "error");
-      throw new Error(`El usuario con id: '${id}', no existe.`);
+    if (!exists || !exists.status) {
+      debug(`El usuario con id: '${id}', no existe ó está deshabilitado.`, "error");
+      throw new Error(`El usuario con id: '${id}', no existe ó está deshabilitado.`);
     }
   }
 };
