@@ -2,9 +2,10 @@ const bcrypt = require("bcryptjs");
 const { request, response } = require("express");
 const { generateJWT } = require("../helpers/generate-jwt");
 const { googleVerify } = require("../helpers/google-verify");
-const debug = require('../utils/debug')
+const debug = require("../utils/debug");
 
 const User = require("../models/user.model");
+const Business = require("../models/business.model");
 
 const login = async (req, res) => {
   try {
@@ -40,6 +41,16 @@ const login = async (req, res) => {
     // Generate JWT
     const token = await generateJWT(user.id);
 
+    const business = await Business.findOne({ user: user.id }).populate("user");
+
+    if (business) {
+      return res.json({
+        ok: true,
+        business,
+        token
+      });
+    }
+
     res.json({
       user,
       token,
@@ -74,10 +85,10 @@ const googleSignIn = async (req = request, res = response) => {
 
       user = new User(data);
       await user.save();
-      debug(`Se ha creado el usuario ${email} a través de google.`, "info")
+      debug(`Se ha creado el usuario ${email} a través de google.`, "info");
     }
 
-    // if user is bloqued 
+    // if user is bloqued
     if (!user.status) {
       return res.status(401).json({
         msg: "Usuario bloqueado, habla con un administrador.",
