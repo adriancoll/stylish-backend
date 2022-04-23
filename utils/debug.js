@@ -12,7 +12,7 @@ colors.setTheme({
   error: ["red", "underline"],
 });
 
-const debug = (message = "", type = "info", hasPrefix = true) => {
+module.exports.debug = (message = "", type = "info", hasPrefix = true) => {
   if (process.env.NODE_ENV === "production")  return;
 
   message = hasPrefix ? `${prefix} ${message}` : message;
@@ -37,4 +37,3 @@ const debug = (message = "", type = "info", hasPrefix = true) => {
   }
 };
 
-module.exports = debug;
