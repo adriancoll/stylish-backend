@@ -1,10 +1,11 @@
+// Dependency Injection
 const bcryptjs = require("bcryptjs");
-const Category = require("../models/services/service-type.model");
+const mongoose = require("mongoose");
 
-const Role = require("../models/role.model");
-const User = require("../models/user.model");
-
+// Models
 const debug = require("../utils/debug");
+const Business = require("../models/business.model");
+const User = require("../models/user.model");
 
 /**
  * Middleware to check if the role name exists on database
@@ -42,9 +43,36 @@ const userExists = async (id) => {
   if (id.match(/^[0-9a-fA-F]{24}$/)) {
     // Yes, it's a valid ObjectId, proceed with `findById` call.
     const exists = await User.findById(id);
+
     if (!exists || !exists.status) {
-      debug(`El usuario con id: '${id}', no existe ó está deshabilitado.`, "error");
-      throw new Error(`El usuario con id: '${id}', no existe ó está deshabilitado.`);
+      debug(
+        `El usuario con id: '${id}', no existe ó está deshabilitado.`,
+        "error"
+      );
+      throw new Error(
+        `El usuario con id: '${id}', no existe ó está deshabilitado.`
+      );
+    }
+  }
+};
+
+/**
+ * Middleware to check if the business exists on database, and user is not disabled
+ * @param {Number} id id of the business to validate
+ */
+const businessExists = async (id) => {
+  if (id.match(/^[0-9a-fA-F]{24}$/)) {
+    // Yes, it's a valid ObjectId, proceed with `findById` call.
+    const exists = await Business.findById(id).populate("user");
+
+    if (!exists || !exists.user.status) {
+      debug(
+        `La empresa con id: '${id}', no existe ó está deshabilitado.`,
+        "error"
+      );
+      throw new Error(
+        `La empresa con id: '${id}', no existe ó está deshabilitado.`
+      );
     }
   }
 };
@@ -60,6 +88,18 @@ const serviceTypeExists = async (id) => {
   }
 };
 
+const isObjectIdArray = function (values) {
+  let isObjectIds = true;
+
+  values.forEach(function (element) {
+    if (!mongoose.Types.ObjectId.isValid(element)) {
+      isObjectIds = false;
+    }
+  });
+
+  return isObjectIds;
+};
+
 const hashPassword = (pwd) => bcryptjs.hashSync(pwd, bcryptjs.genSaltSync());
 
 module.exports = {
@@ -68,4 +108,6 @@ module.exports = {
   hashPassword,
   userExists,
   serviceTypeExists,
+  businessExists,
+  isObjectIdArray,
 };
