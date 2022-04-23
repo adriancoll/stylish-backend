@@ -12,6 +12,8 @@ const BusinessSchema = new Schema({
   service_types: [{
       type:Schema.Types.ObjectId,
       ref: 'Service-Type',
+      default: [],
+      unique: true
   }],
   user: {
     type: Schema.Types.ObjectId,

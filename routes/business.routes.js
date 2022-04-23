@@ -4,9 +4,10 @@ const { check } = require("express-validator");
 const {
   getUserBusiness,
   storeBusiness,
+  updateBusiness,
 } = require("../controllers/business.controller");
 
-const { userExists } = require("../helpers/db-validators");
+const { userExists, businessExists, isObjectIdArray } = require("../helpers/db-validators");
 
 const { validateJWT, crudValidator, hasRole } = require("../middlewares");
 
@@ -25,9 +26,23 @@ router.post(
     check("user_id").custom(userExists),
     check("name", "El nombre es obligatorio.").not().isEmpty(),
     check("image", "La imagen es obligatoria.").not().isEmpty(),
+    check("service_types", "Los tipos de servicios enviados no son válidos").optional().custom(isObjectIdArray),
     crudValidator,
   ],
   storeBusiness
+);
+
+
+router.put(
+  "/:id",
+  [
+    validateJWT,  
+    check("id", "No es un id válido").isMongoId(),
+    check("id").custom(businessExists),
+    check("service_types", "Los tipos de servicios enviados no son válidos").optional().custom(isObjectIdArray),
+    crudValidator,
+  ],
+  updateBusiness
 );
 
 module.exports = router;
