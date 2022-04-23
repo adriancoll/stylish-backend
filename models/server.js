@@ -13,6 +13,7 @@ class Server {
     this.usuariosRoutePath    = "/api/user";
     this.serviceTypeRoutePath = "/api/service/type";
     this.businessRoutePath    = "/api/business";
+    this.appointmentRoutePath    = "/api/appointment";
 
     //conectar base de datos
     this.conectarDB();
@@ -43,6 +44,7 @@ class Server {
     this.app.use(this.usuariosRoutePath, validateJWT, require("../routes/user.routes"));
     this.app.use(this.serviceTypeRoutePath, require("../routes/service-type.routes"));
     this.app.use(this.businessRoutePath, require("../routes/business.routes"));
+    this.app.use(this.appointmentRoutePath, require("../routes/appointment.routes"));
   }
 
   listen() {
