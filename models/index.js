@@ -3,6 +3,7 @@ const Server       = require("./server");
 const User         = require("./user.model");
 const Role         = require("./role.model");
 const Business     = require("./business.model");
+const Appointment  = require("./appointment.model");
 
 module.exports = {
   Service_type,
@@ -10,4 +11,5 @@ module.exports = {
   User,
   Role,
   Business,
+  Appointment
 };
