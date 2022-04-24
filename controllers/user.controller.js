@@ -24,7 +24,7 @@ const userGet = async (req = request, res = response) => {
 
 const userPost = async (req = request, res) => {
   try {
-    const { name, email, role, password, image } = req.body;
+    const { name, email, role, password, image, phone_number } = req.body;
 
     const user = new User({
       name,
@@ -32,6 +32,7 @@ const userPost = async (req = request, res) => {
       role,
       password,
       image,
+      phone_number
     });
 
     // Hashear contraseña

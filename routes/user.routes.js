@@ -12,6 +12,7 @@ const {
   isValidRole,
   emailExists,
   userExists,
+  userWithPhoneExists,
 } = require("../helpers/db-validators");
 
 const { crudValidator, isAdminRole } = require("../middlewares");
@@ -34,13 +35,15 @@ router.put(
 router.post(
   "/",
   [
-    check("name", "El nombre es obligatorio.").not().isEmpty(),
+    check("name", "El nombre es obligatorio.").notEmpty(),
+    check("email", "El correo no es válido.").isEmail(),
+    check("email").custom(emailExists),
+    check("phone_number", "El número de teléfono no es válido.").notEmpty().isMobilePhone(),
+    check("phone_number").custom(userWithPhoneExists),
     check("password", "La contraseña debe tener más de 6 letras.").isLength({
       min: 6,
     }),
-    check("email").custom(emailExists),
     check("role").custom(isValidRole),
-    check("email", "El correo no es válido.").isEmail(),
     crudValidator,
   ],
   userPost

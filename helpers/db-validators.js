@@ -4,8 +4,8 @@ const mongoose = require("mongoose");
 
 // Models
 const debug = require("../utils/debug");
-const Business = require("../models/business.model");
-const User = require("../models/user.model");
+
+const { Business, Role, User } = require('../models')
 
 /**
  * Middleware to check if the role name exists on database
@@ -13,7 +13,7 @@ const User = require("../models/user.model");
  */
 const isValidRole = async (name = "") => {
   if (name === "ADMIN_ROLE") {
-    throw new Error(`No se puede crear un usuario con el rol ${name}.`);
+    throw new Error(`No se puede crear y/o actualizar un usuario con el rol ${name}.`);
   }
 
   const existeRol = await Role.findOne({ name });
@@ -34,6 +34,19 @@ const emailExists = async (email = "") => {
     throw new Error(`El email '${email}', ya está registrado.`);
   }
 };
+
+/**
+ * Middleware to check if the email exists on database
+ * @param {String} email to validate
+ */
+ const userWithPhoneExists = async (phoneNumber = "") => {
+  const existePhoneNumber = await User.findOne({ phone_number: phoneNumber });
+
+  if (existePhoneNumber) {
+    throw new Error(`El número de teléfono '${phoneNumber}', ya está registrado.`);
+  }
+};
+
 
 /**
  * Middleware to check if the user exists on database
@@ -110,4 +123,5 @@ module.exports = {
   serviceTypeExists,
   businessExists,
   isObjectIdArray,
+  userWithPhoneExists,
 };
