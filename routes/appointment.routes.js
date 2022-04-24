@@ -2,7 +2,7 @@ const { Router } = require('express')
 const { check } = require('express-validator')
 const { crudValidator } = require('../middlewares/crud-validators')
 
-const { storeAppointment } = require('../controllers/appointment.controller')
+const { storeAppointment, confirmAppointment, getAllAppointments, updateAppointment, deleteAppointment } = require('../controllers/appointment.controller')
 
 const router = Router()
 
@@ -10,23 +10,22 @@ router.post('/', [
     crudValidator
 ], storeAppointment)
 
-/*
-router.post('/confirm/:id', {
+router.post('/confirm/:id', [
     crudValidator
-}, confirmAppointment)
+], confirmAppointment)
 
-router.post('/get-all', {
+router.post('/all', [
     crudValidator
-}, getAllAppointments)
+], getAllAppointments)
 
-router.put('/:id', {
+router.put('/:id', [
     crudValidator
-}, updateAppointment)
+], updateAppointment)
 
-router.delete('/:id', {
+router.delete('/:id', [
     crudValidator
-}, deeteAppointment)
-*/
+], deleteAppointment)
+
 
 
 module.exports = router
