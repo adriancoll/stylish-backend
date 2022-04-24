@@ -61,7 +61,7 @@ const storeBusiness = async (req = request, res = response) => {
     name,
     image,
     user: user_id,
-    service_types 
+    service_types,
   });
 
   business = await Business.findById(business._id).populate(
@@ -82,7 +82,7 @@ const updateBusiness = async (req, res) => {
     const { service_types, ...data } = req.body;
 
     /**
-     * Clear duplicated values in case of API 
+     * Clear duplicated values in case of API
      * bad usage of the user, maybe errors in frontend
      * just make a set of unique values
      */
@@ -113,8 +113,15 @@ const updateBusiness = async (req, res) => {
   }
 };
 
+const getAllBusiness = async (_req, res) => {
+  const businesses = await Business.find();
+
+  res.json(businesses);
+};
+
 module.exports = {
   getUserBusiness,
   storeBusiness,
   updateBusiness,
+  getAllBusiness,
 };

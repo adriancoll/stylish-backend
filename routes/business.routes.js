@@ -5,6 +5,7 @@ const {
   getUserBusiness,
   storeBusiness,
   updateBusiness,
+  getAllBusiness,
 } = require("../controllers/business.controller");
 
 const { userExists, businessExists, isObjectIdArray } = require("../helpers/db-validators");
@@ -32,6 +33,7 @@ router.post(
   storeBusiness
 );
 
+router.post("/all", [], getAllBusiness);
 
 router.put(
   "/:id",
