@@ -1,10 +1,18 @@
 const { Schema, model } = require("mongoose");
 
+/**
+ * @todo añadir tiempos de servicio
+ */
 const ServiceTypeSchema = new Schema({
   name: {
     type: String,
     required: [true, "El nombre es obligatorio."],
   },
+  // Duration in minutes
+  duration: {
+    type: Number,
+    required: [true, "La duración del servicio es obligatorio."]
+  },  
   status: {
     type: Boolean,
     default: true,
