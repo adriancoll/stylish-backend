@@ -9,10 +9,9 @@ const getUserBusiness = async (req = request, res = response) => {
   const query = { user: req.user.id, status: true };
 
   try {
-    const business = await Business.findOne(query).populate(
-      "user",
-      "-password -__v"
-    );
+    const business = await Business.findOne(query)
+      .populate("user", "-password -__v")
+      .populate("service_types", "-user -__v");
 
     if (!business) {
       return res.status(401).json({
@@ -114,7 +113,9 @@ const updateBusiness = async (req, res) => {
 };
 
 const getAllBusiness = async (_req, res) => {
-  const businesses = await Business.find();
+  const businesses = await Business.find()
+    .populate("user", "-passowrd -__v")
+    .populate("service_types", "-user -__v");
 
   res.json(businesses);
 };
