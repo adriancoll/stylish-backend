@@ -4,16 +4,6 @@ const debug = require("../../utils/debug");
 const ServiceType = require("../../models/services/service-type.model");
 
 const getAllServiceType = async (req = request, res = response) => {
-  // change to middleware
-  // const options = {
-  //   status: true
-  // }
-
-  // const [service_types, total] = await Promise.all([
-  //   await ServiceType.find(options).populate("user"),
-  //   await ServiceType.count(options),
-  // ]);
-
   res.json(res.paginatedResults);
 };
 
@@ -24,11 +14,12 @@ const getServiceTypeByID = (req = request, res = response) => {
 };
 
 const storeServiceType = async (req = request, res = response) => {
-  const name = req.body.name.toUpperCase();
+  const { duration, name } = req.body
 
   const payload = {
-    name,
+    name: name.toUpperCase(),
     user: req.user.id,
+    duration
   };
 
   const alreadyExists = await ServiceType.findOne({ name });
