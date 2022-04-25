@@ -34,6 +34,7 @@ router.post(
   [
     validateJWT,
     check("name", "El nombre no puede estar vacío").notEmpty(),
+    check("duration", "La duración debe ser un número válido.").isNumeric(),
     crudValidator,
   ],
   storeServiceType
