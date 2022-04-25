@@ -3,7 +3,7 @@ const { hashPassword } = require("../helpers/db-validators");
 const path = require("path");
 
 const User = require("../models/user.model");
-const { fileUpload } = require("../helpers");
+const { fileUpload, success } = require("../helpers");
 
 const userGet = async (req = request, res = response) => {
   const {
@@ -18,10 +18,16 @@ const userGet = async (req = request, res = response) => {
     User.countDocuments(query),
   ]);
 
-  res.json({
-    total,
-    users,
-  });
+  res.json(
+    success(
+      "OK",
+      {
+        total,
+        users,
+      },
+      res.statusCode
+    )
+  );
 };
 
 const userPost = async (req = request, res) => {
@@ -42,15 +48,26 @@ const userPost = async (req = request, res) => {
 
     // Guardar en BD
     const savedUser = await user.save();
-    res.status(201).json({
-      ok: true,
-      user: savedUser,
-    });
+    res.status(201).json(
+      success(
+        "Usuario creado",
+        {
+          user: savedUser,
+        },
+        res.statusCode
+      )
+    );
   } catch (error) {
-    res.status(500).json({
-      ok: false,
-      error,
-    });
+    res.json(
+      error(
+        "Error al crear usuario",
+        {
+          ok: false,
+          error,
+        },
+        res.statusCode
+      )
+    );
   }
 };
 
@@ -79,15 +96,19 @@ const userUpdate = async (req = request, res = response) => {
   // get the user and update
   user = await User.findByIdAndUpdate(id, other, { new: true });
 
-  res.json({
-    user,
-  });
+  res.json(
+    success(
+      "OK",
+      {
+        user,
+      },
+      res.statusCode
+    )
+  );
 };
 
 const userDelete = async (req = request, res = response) => {
   const { id } = req.params;
-
-  const authUser = req.user;
 
   const user = await User.findByIdAndUpdate(
     id,
@@ -97,11 +118,7 @@ const userDelete = async (req = request, res = response) => {
     { new: true }
   );
 
-  res.json({
-    ok: true,
-    user,
-    authUser,
-  });
+  res.json(success("Usuario eliminado", { user }, res.statusCode));
 };
 
 module.exports = {

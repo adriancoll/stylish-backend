@@ -5,14 +5,12 @@
  * @param   {object | array} results
  * @param   {number} statusCode
  */
-exports.success = (message, results, statusCode) => {
-  return {
-    message,
-    error: false,
-    code: statusCode,
-    results,
-  };
-};
+exports.success = (message, results, statusCode) => ({
+  message,
+  error: false,
+  code: statusCode,
+  results,
+});
 
 /**
  * @desc    Send any error response
@@ -34,19 +32,5 @@ exports.error = (message, statusCode) => {
     message,
     code: statusCode,
     error: true,
-  };
-};
-
-/**
- * @desc    Send any validation response
- *
- * @param   {object | array} errors
- */
-exports.validation = (errors) => {
-  return {
-    message: "Validation errors",
-    error: true,
-    code: 422,
-    errors,
   };
 };
