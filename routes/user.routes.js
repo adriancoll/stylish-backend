@@ -3,9 +3,9 @@ const { check } = require("express-validator");
 
 const {
   userGet,
-  userPut,
   userPost,
   userDelete,
+  userUpdate,
 } = require("../controllers/user.controller");
 
 const {
@@ -15,21 +15,26 @@ const {
   userWithPhoneExists,
 } = require("../helpers/db-validators");
 
-const { crudValidator, isAdminRole } = require("../middlewares");
+const { crudValidator, isAdminRole, validateJWT } = require("../middlewares");
 
 const router = Router();
 
 router.post("/all", userGet);
 
-router.put(
+router.post(
   "/:id",
   [
+    validateJWT,
     check("id", "No es un id válido").isMongoId(),
     check("id").custom(userExists),
     check("role").custom(isValidRole).optional(),
+    check("phone_number", "El número de teléfono no es válido.").isMobilePhone(
+      "es-ES"
+    ),
+    check("phone_number").custom(userWithPhoneExists),
     crudValidator,
   ],
-  userPut
+  userUpdate
 );
 
 router.post(
@@ -38,7 +43,9 @@ router.post(
     check("name", "El nombre es obligatorio.").notEmpty(),
     check("email", "El correo no es válido.").isEmail(),
     check("email").custom(emailExists),
-    check("phone_number", "El número de teléfono no es válido.").notEmpty().isMobilePhone(),
+    check("phone_number", "El número de teléfono no es válido.").isMobilePhone(
+      "es-ES"
+    ),
     check("phone_number").custom(userWithPhoneExists),
     check("password", "La contraseña debe tener más de 6 letras.").isLength({
       min: 6,

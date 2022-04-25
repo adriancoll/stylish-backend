@@ -1,7 +1,9 @@
 const { response, request } = require("express");
 const { hashPassword } = require("../helpers/db-validators");
+const path = require("path");
 
 const User = require("../models/user.model");
+const { fileUpload } = require("../helpers");
 
 const userGet = async (req = request, res = response) => {
   const {
@@ -32,7 +34,7 @@ const userPost = async (req = request, res) => {
       role,
       password,
       image,
-      phone_number
+      phone_number,
     });
 
     // Hashear contraseña
@@ -52,19 +54,30 @@ const userPost = async (req = request, res) => {
   }
 };
 
-const userPut = async (req = request, res = response) => {
+const userUpdate = async (req = request, res = response) => {
+  let user;
+
   const { id } = req.params;
 
   // Defragment for excluding form normal validation
-  const { _id, password, google, email, ...other } = req.body;
+  const { _id, password, google, email, image, ...other } = req.body;
 
-  // Wants to change it's own password
+  if (req.files && Object.keys(files).length > 0) {
+    const imagePath = await fileUpload(req.files);
+    user = await User.findByIdAndUpdate(
+      id,
+      { image: imagePath },
+      { new: true }
+    );
+  }
+
+  // If wants to change it's password
   if (password) {
     other.password = hashPassword(password);
   }
 
   // get the user and update
-  const user = await User.findByIdAndUpdate(id, other, { new: true });
+  user = await User.findByIdAndUpdate(id, other, { new: true });
 
   res.json({
     user,
@@ -94,6 +107,6 @@ const userDelete = async (req = request, res = response) => {
 module.exports = {
   userGet,
   userPost,
-  userPut,
+  userUpdate,
   userDelete,
 };
