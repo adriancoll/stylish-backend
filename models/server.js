@@ -1,18 +1,20 @@
 const express = require("express");
+const fileUpload = require("express-fileupload");
 const cors = require("cors");
+
 const { dbConnection } = require("../database/config");
-const { validateJWT } = require("../middlewares/jwt-validator");
-const debug = require('../utils/debug')
+const { validateJWT } = require("../middlewares");
+const debug = require("../utils/debug");
 
 class Server {
   constructor() {
     this.app = express();
     this.port = process.env.PORT;
 
-    this.authPath             = "/api/auth";
-    this.usuariosRoutePath    = "/api/user";
+    this.authPath = "/api/auth";
+    this.usuariosRoutePath = "/api/user";
     this.serviceTypeRoutePath = "/api/service/type";
-    this.businessRoutePath    = "/api/business";
+    this.businessRoutePath = "/api/business";
     this.appointmentRoutePath = "/api/appointment";
 
     //conectar base de datos
@@ -37,14 +39,26 @@ class Server {
 
     //Directorio publico
     this.app.use(express.static("public"));
+
+    // file managment
+    this.app.use(fileUpload({
+      useTempFiles: true,
+      tempFileDir: '/tmp/'
+    }));
   }
 
   routes() {
     this.app.use(this.authPath, require("../routes/auth.routes"));
     this.app.use(this.usuariosRoutePath, require("../routes/user.routes"));
-    this.app.use(this.serviceTypeRoutePath, require("../routes/service-type.routes"));
+    this.app.use(
+      this.serviceTypeRoutePath,
+      require("../routes/service-type.routes")
+    );
     this.app.use(this.businessRoutePath, require("../routes/business.routes"));
-    this.app.use(this.appointmentRoutePath, require("../routes/appointment.routes"));
+    this.app.use(
+      this.appointmentRoutePath,
+      require("../routes/appointment.routes")
+    );
   }
 
   listen() {
