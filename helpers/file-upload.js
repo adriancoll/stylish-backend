@@ -20,7 +20,6 @@ const fileUpload = (files, validExtensions = VALID_IMAGE_EXTENSIONS) => {
       const uploadPath = path.join(__dirname, "../uploads/", tempName);
 
       file.mv(uploadPath, function (err) {
-        console.log("hola")
         reject(err);
       });
 
