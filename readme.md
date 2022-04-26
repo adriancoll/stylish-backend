@@ -51,6 +51,14 @@ Deployed on <a href="https://stylish-backend.herokuapp.com/">Heroku</a>.
 Linked with github repository, and the same database as development area.\
 For pushing in production use always the most secure branch of the proyect, like `master`.
 
+How to install and mount `Heroku` into the repository: 
+```bash
+    npm i -g heroku
+    heroku login
+    heroku -v
+    heroku git:remote -a stylish-backend
+```
+
 How to deploy:
 
 ```bash
