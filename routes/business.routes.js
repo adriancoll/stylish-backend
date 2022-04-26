@@ -39,6 +39,7 @@ router.put(
   "/:id",
   [
     validateJWT,  
+    hasRole("BUSINESS_ROLE", "ADMIN_ROLE"),
     check("id", "No es un id válido").isMongoId(),
     check("id").custom(businessExists),
     check("service_types", "Los tipos de servicios enviados no son válidos").optional().custom(isObjectIdArray),

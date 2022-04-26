@@ -5,6 +5,8 @@ const debug = require("../utils/debug");
 const Business = require("../models/business.model");
 const User = require("../models/user.model");
 
+const { error, success } = require("../helpers");
+
 const getUserBusiness = async (req = request, res = response) => {
   const query = { user: req.user.id, status: true };
 
@@ -14,21 +16,20 @@ const getUserBusiness = async (req = request, res = response) => {
       .populate("service_types", "-user -__v");
 
     if (!business) {
-      return res.status(401).json({
-        ok: false,
-        msg: "No tienes un negocio asociado",
-      });
+      return res.status(401).json(error("No tienes un negocio asociado"));
     }
 
-    res.json({
-      ok: true,
-      business,
-    });
+    res.json(success("ok", { business }, res.statusCode));
   } catch (e) {
-    res.status(500).json({
-      ok: false,
-      msg: "Error inesperado, el usuario no dispone de una empresa.",
-    });
+    res
+      .status(500)
+      .json(
+        error(
+          "Error inesperado, el usuario no dispone de una empresa.",
+          {},
+          res.statusCode
+        )
+      );
   }
 };
 
@@ -50,10 +51,7 @@ const storeBusiness = async (req = request, res = response) => {
   }
 
   if (exists) {
-    return res.status(401).json({
-      ok: false,
-      msg: "El usuario ya tiene un negocio asociado",
-    });
+    return res.status(401).json(error("El usuario ya tiene un negocio", null ,res.statusCode));
   }
 
   let business = await Business.create({

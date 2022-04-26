@@ -27,6 +27,8 @@ const hasRole = (...roles) => {
       });
     }
 
+    console.log(roles.includes('ADMIN_ROLE'), roles)
+
     if (!roles.includes(req.user.role)) {
       return res.status(401).json({
         msg: `¡No tienes el rol: ${roles.join(', ')}!`,

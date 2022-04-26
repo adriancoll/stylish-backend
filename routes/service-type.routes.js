@@ -33,6 +33,7 @@ router.post(
   "/",
   [
     validateJWT,
+    isAdminRole,
     check("name", "El nombre no puede estar vacío").notEmpty(),
     check("duration", "La duración debe ser un número válido.").isNumeric(),
     crudValidator,
@@ -44,6 +45,7 @@ router.put(
   "/:id",
   [
     validateJWT,
+    isAdminRole,
     check("name", "El nombre no puede estar vacío").notEmpty(),
     crudValidator,
   ],

@@ -1,36 +1,33 @@
 const { response } = require("express");
-const { request }  = require("express");
-const debug        = require('../utils/debug');
+const { request } = require("express");
+const debug = require("../utils/debug");
 
 // Models
 const { Appointment } = require("../models");
-
+const { success, error } = require("../helpers");
 
 const storeAppointment = async (req = request, res = response) => {
   const {} = req.body;
 
   const appointment = await Appointment.findOne({});
 
-  res.json({ appointment });
+  res.json(success("ok", { appointment }, res.statusCode));
 };
 
 const deleteAppointment = async (req = request, res = response) => {
   const { id } = req.params;
 
   try {
-    await Appointment.findByIdAndUpdate(id, {
+    const appointment = await Appointment.findByIdAndUpdate(id, {
       status: "CANCELLED",
     });
-    
-    return res.json({
-      ok: true,
-    });
+
+    return res.status(200).json(success("ok", { appointment }, res.statusCode));
   } catch (ex) {
     debug("Ha habido un error al eliminar la reserva.", "error");
-    return res.json({
-      ok: false,
-      msg: "Ha habido un error al eliminar la reserva.",
-    });
+    return res.json(
+      error("Ha habido un error al eliminar la reserva.", {}, res.statusCode)
+    );
   }
 };
 
