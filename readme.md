@@ -1,6 +1,7 @@
 # Backend for stylish mobile app
 
 **Stylish REST API**, mounted on a `nodejs` and `expressjs` structure, with a `mongodb` database hosted on mongodb atlas.
+Structure based on the <a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">MVC pattern</a>.
 
 <br>
 
