@@ -35,7 +35,7 @@ router.post(
 
 router.post("/all", [], getAllBusiness);
 
-router.put(
+router.post(
   "/:id",
   [
     validateJWT,  
