@@ -21,7 +21,7 @@ const getUserBusiness = async (req = request, res = response) => {
         .json(error('No tienes un negocio asociado', {}, res.statusCode))
     }
 
-    res.json(success('ok', { business }, res.statusCode))
+    res.json(success('OK', { business }, res.statusCode))
   } catch (e) {
     res
       .status(500)
@@ -46,10 +46,15 @@ const storeBusiness = async (req = request, res = response) => {
   ])
 
   if (!userHasRoleAndExists) {
-    return res.status(401).json({
-      ok: false,
-      msg: 'El usuario no tiene un rol de empresa o no existe',
-    })
+    return res
+      .status(401)
+      .json(
+        error(
+          'El usuario no tiene un rol de empresa o no existe',
+          {},
+          res.statusCode
+        )
+      )
   }
 
   if (exists) {
@@ -67,10 +72,15 @@ const storeBusiness = async (req = request, res = response) => {
 
   business = await Business.findById(business._id).populate('user', '-password')
 
-  res.json({
-    ok: true,
-    business,
-  })
+  res.json(
+    success(
+      'ok',
+      {
+        business,
+      },
+      res.statusCode
+    )
+  )
 }
 
 const updateBusiness = async (req = request, res = response) => {

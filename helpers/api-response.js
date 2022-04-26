@@ -3,9 +3,9 @@
  *
  * @param   {string} message
  * @param   {object | array} results
- * @param   {number} statusCode
+ * @param   {number} statusCode @default 200
  */
-exports.success = (message, results, statusCode) => ({
+exports.success = (message, results, statusCode = 200) => ({
   message,
   error: false,
   code: statusCode,
