@@ -23,10 +23,12 @@ const fileUpload = (files, validExtensions = VALID_IMAGE_EXTENSIONS) => {
     const uploadPath = path.join(__dirname, PATH, tempName);
 
     file.mv(uploadPath, function (err) {
-      reject(err);
+      if (err) {
+        return reject(err);
+      }
+      resolve(uploadPath);
     });
 
-    resolve(uploadPath);
   });
 };
 
