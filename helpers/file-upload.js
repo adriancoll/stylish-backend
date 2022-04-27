@@ -2,7 +2,7 @@ const path = require('path')
 const { v4: uuidv4 } = require('uuid')
 
 const VALID_IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png']
-const PATH = '../uploads/'
+const PATH = './public/assets/uploads'
 
 const fileUpload = (files, validExtensions = VALID_IMAGE_EXTENSIONS) => {
   return new Promise((resolve, reject) => {
