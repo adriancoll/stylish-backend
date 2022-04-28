@@ -37,6 +37,46 @@ const getAllAppointments = async (req = request, res = response) => {
   res.json(appointments);
 };
 
+const getMyAppointments = async (req = request, res = response) => {
+  let appointments;
+
+  const { business_id } = req.body;
+
+  if (!business_id) {
+    const { id } = req.user;
+    appointments = await Appointment.find({ user: id });
+  } else {
+    appointments = await Appointment.find({
+      business: business_id,
+    });
+  }
+
+  const filteredAppointments = {
+    PENDING_CONFIRM: appointments.filter(
+      (appointment) => appointment.status === "PENDING_CONFIRM"
+    ),
+    CONFIRMED: appointments.filter(
+      (appointment) => appointment.status === "CONFIRMED"
+    ),
+    COMPLETED: appointments.filter(
+      (appointment) => appointment.status === "COMPLETED"
+    ),
+    CANCELLED: appointments.filter(
+      (appointment) => appointment.status === "CANCELLED"
+    ),
+  };
+
+  res.json(
+    success(
+      "ok",
+      {
+        appointments: filteredAppointments,
+      },
+      res.statusCode
+    )
+  );
+};
+
 const confirmAppointment = async (req = request, res = response) => {
   const { id } = req.params;
 
@@ -70,4 +110,5 @@ module.exports = {
   getAllAppointments,
   confirmAppointment,
   updateAppointment,
+  getMyAppointments,
 };
