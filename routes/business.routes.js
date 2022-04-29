@@ -10,7 +10,7 @@ const {
 
 const { userExists, businessExists, isObjectIdArray } = require("../helpers/db-validators");
 
-const { validateJWT, crudValidator, hasRole } = require("../middlewares");
+const { validateJWT, crudValidator, hasRole, isBodyEmpty } = require("../middlewares");
 
 const router = Router();
 
@@ -38,6 +38,7 @@ router.post("/all", [], getAllBusiness);
 router.post(
   "/:id",
   [
+    isBodyEmpty,
     validateJWT,  
     hasRole("BUSINESS_ROLE", "ADMIN_ROLE"),
     //url query
