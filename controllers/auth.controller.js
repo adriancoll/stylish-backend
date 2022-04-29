@@ -8,7 +8,7 @@ const User = require("../models/user.model");
 const Business = require("../models/business.model");
 const Appointment = require("../models/appointment.model");
 
-const login = async (req, res) => {
+const login = async (req = request, res = response) => {
   try {
     const { email, password } = req.body;
 
