@@ -40,8 +40,11 @@ router.post(
   [
     validateJWT,  
     hasRole("BUSINESS_ROLE", "ADMIN_ROLE"),
+    //url query
     check("id", "No es un id válido").isMongoId(),
-    check("id").custom(businessExists),
+    check("id", "No existe el negocio que estás intentandon editar.").custom(businessExists),
+    //body
+    check("user", "El usuario no existe o es un id inválido.").optional().isMongoId().custom(userExists),
     check("service_types", "Los tipos de servicios enviados no son válidos").optional().custom(isObjectIdArray),
     crudValidator,
   ],
