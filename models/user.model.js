@@ -17,7 +17,7 @@ const UserSchema = new Schema({
   },
   password: {
     type: String,
-    required: [true, "La contraseña es obligatoria."],
+    required: [true, "La contraseña es obligatoria."]
   },
   image: {
     type: String,
@@ -30,7 +30,7 @@ const UserSchema = new Schema({
   },
   status: {
     type: Boolean,
-    default: true,
+    default: true
   },
   google: {
     type: Boolean,
