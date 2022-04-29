@@ -4,6 +4,7 @@ const debug = require("../utils/debug");
 
 const Business = require("../models/business.model");
 const User = require("../models/user.model");
+const { clearDuplicates } = require("../utils/functions");
 
 const { error, success, fileUpload } = require("../helpers");
 
@@ -41,7 +42,7 @@ const storeBusiness = async (req = request, res = response) => {
   const userQuery = { status: true, role: "BUSINESS_ROLE", _id: user_id };
 
   const [userHasRoleAndExists, exists] = await Promise.all([
-    await User.findOne(userQuery),
+    User.findOne(userQuery),
     Business.findOne({ user: user_id }),
   ]);
 
@@ -63,17 +64,17 @@ const storeBusiness = async (req = request, res = response) => {
       .json(error("El usuario ya tiene un negocio", null, res.statusCode));
   }
 
+  const $service_types = clearDuplicates(service_types);
   let business = await Business.create({
     name,
     image,
     user: user_id,
-    service_types,
+    service_types: $service_types,
   });
 
-  business = await Business.findById(business._id).populate(
-    "user",
-    "-password"
-  );
+  business = await Business.findById(business._id)
+    .populate("user", "-password")
+    .populate("service_types", "-user -status -__v");
 
   res.json(
     success(
@@ -119,7 +120,9 @@ const updateBusiness = async (req = request, res = response) => {
      * bad usage of the user, maybe errors in frontend
      * just make a set of unique values
      */
-    const $service_types = [...new Set(service_types)];
+    const $service_types = clearDuplicates(service_types);
+
+    console.log($service_types);
 
     business = await Business.findByIdAndUpdate(
       id,
