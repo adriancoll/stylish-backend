@@ -54,6 +54,7 @@ const emailExists = async (email = "") => {
  */
 const userExists = async (id) => {
   if (id.match(/^[0-9a-fA-F]{24}$/)) {
+    console.log('asd')
     // Yes, it's a valid ObjectId, proceed with `findById` call.
     const exists = await User.findById(id);
 
@@ -78,13 +79,24 @@ const businessExists = async (id) => {
     // Yes, it's a valid ObjectId, proceed with `findById` call.
     const exists = await Business.findById(id).populate("user");
 
-    if (!exists || !exists.user.status) {
+    console.log(exists)
+    if (!exists) {
       debug(
         `La empresa con id: '${id}', no existe ó está deshabilitado.`,
         "error"
       );
       throw new Error(
         `La empresa con id: '${id}', no existe ó está deshabilitado.`
+      );
+    }
+
+    if (!exists.user) {
+      debug(
+        `El usuario vinculado con el negocio con id: '${id}', no existe ó está deshabilitado.`,
+        "error"
+      );
+      throw new Error(
+        `El usuario vinculado con el negocio con id: '${id}', no existe ó está deshabilitado.`
       );
     }
   }
@@ -95,7 +107,7 @@ const serviceTypeExists = async (id) => {
     // Yes, it's a valid ObjectId, proceed with `findById` call.
     const exists = await Category.findById(id);
     if (!exists) {
-      debug("¡Se ha intentado modificat una categoría que no existe!", "error");
+      debug("¡Se ha intentado modificar una categoría que no existe!", "error");
       throw new Error(`La categoría con id: '${id}', no existe.`);
     }
   }
