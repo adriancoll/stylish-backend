@@ -12,6 +12,7 @@ const ServiceTypeSchema = new Schema({
   status: {
     type: Boolean,
     default: true,
+    select: false,
   },
 });
 

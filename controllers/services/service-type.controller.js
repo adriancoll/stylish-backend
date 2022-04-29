@@ -2,9 +2,11 @@ const { request, response } = require("express");
 const debug = require("../../utils/debug");
 
 const ServiceType = require("../../models/services/service-type.model");
+const { success } = require("../../helpers");
 
 const getAllServiceType = async (req = request, res = response) => {
-  res.json(res.paginatedResults);
+  const service_types = await ServiceType.find({ status: true });
+  res.json(success("ok", service_types, res.statusCode));
 };
 
 const getServiceTypeByID = (req = request, res = response) => {
@@ -14,12 +16,12 @@ const getServiceTypeByID = (req = request, res = response) => {
 };
 
 const storeServiceType = async (req = request, res = response) => {
-  const { duration, name } = req.body
+  const { duration, name } = req.body;
 
   const payload = {
     name: name.toUpperCase(),
     user: req.user.id,
-    duration
+    duration,
   };
 
   const alreadyExists = await ServiceType.findOne({ name });

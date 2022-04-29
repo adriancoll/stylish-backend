@@ -18,7 +18,7 @@ const { paginatedResults } = require("../helpers/paginator");
 
 const router = Router();
 
-router.post("/all", [paginatedResults(ServiceType)], getAllServiceType);
+router.post("/all", [], getAllServiceType);
 
 router.post(
   "/:id",
