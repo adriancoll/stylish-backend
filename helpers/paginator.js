@@ -1,7 +1,10 @@
+const { response, request } = require("express");
+const { error } = require("./api-response");
+
 const debug = require("../utils/debug");
 
 const paginatedResults = (SchemaModel) => {
-  return async (req, res, next) => {
+  return async (req = request, res = response, next) => {
     const { options } = req.body;
 
     if (!options) {
@@ -27,7 +30,7 @@ const paginatedResults = (SchemaModel) => {
       next();
     } catch (e) {
       debug(`Ha habido un error en la paginación => ${e.message}`, "error");
-      res.status(500).json({ message: "Error Occured", e });
+      res.status(500).json(error({ message: "Error Occured", e }, res.statusCode));
     }
   };
 };
