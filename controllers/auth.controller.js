@@ -6,6 +6,7 @@ const debug = require("../utils/debug");
 
 const User = require("../models/user.model");
 const Business = require("../models/business.model");
+const Appointment = require("../models/appointment.model");
 
 const login = async (req, res) => {
   try {
@@ -16,7 +17,7 @@ const login = async (req, res) => {
 
     if (!user) {
       res.status(400).json({
-        msg: "Usuaraio o contraseña incorrectos inténtalo de nuevo.",
+        msg: "Usuario o contraseña incorrectos inténtalo de nuevo.",
       });
       return;
     }
@@ -39,15 +40,20 @@ const login = async (req, res) => {
     }
 
     // Generate JWT
-    const token = await generateJWT(user.id);
-
-    const business = await Business.findOne({ user: user.id }).populate("user");
+    const [token, business, appointments] = await Promise.all([
+      generateJWT(user.id),
+      Business.findOne({ user: user.id })
+        .populate("user", "-password -__v")
+        .populate("service_types", "-user -__v"),
+      Appointment.findOne({ user: user.id }),
+    ]);
 
     if (business) {
       return res.json({
         ok: true,
         business,
-        token
+        appointments,
+        token,
       });
     }
 
