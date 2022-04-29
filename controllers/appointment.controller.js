@@ -102,7 +102,9 @@ const updateAppointment = async (req = request, res = response) => {
 
   const appointment = await Appointment.findOneAndUpdate(id, data, {
     new: true,
-  });
+  })
+    .populate("user", "-password")
+    .populate("business");
 
   res.json({ appointment });
 };
