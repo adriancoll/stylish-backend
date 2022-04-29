@@ -10,14 +10,31 @@ const {
   deleteAppointment,
   getMyAppointments,
 } = require("../controllers/appointment.controller");
+
 const { hasRole, validateJWT, isAdminRole } = require("../middlewares");
-const { businessExists } = require("../helpers/db-validators");
+
+const {
+  businessExists,
+  serviceTypeExists,
+  userExists,
+} = require("../helpers/db-validators");
 
 const router = Router();
 
 router.post(
   "/",
-  [validateJWT, hasRole("USER_ROLE", "ADMIN_ROLE"), crudValidator],
+  [
+    validateJWT,
+    // hasRole("USER_ROLE", "ADMIN_ROLE"),
+    check("business").isMongoId(),
+    check("service_type").isMongoId(),
+
+    check("business").custom(businessExists),
+    check("service_type").custom(serviceTypeExists),
+
+    check("observations").optional().isString(),
+    crudValidator,
+  ],
   storeAppointment
 );
 

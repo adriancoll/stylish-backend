@@ -7,9 +7,12 @@ const { Appointment } = require("../models");
 const { success, error } = require("../helpers");
 
 const storeAppointment = async (req = request, res = response) => {
-  const {} = req.body;
+  const { body, user } = req;
 
-  const appointment = await Appointment.findOne({});
+  const appointment = await Appointment.findOne({
+    user: user._id,
+    ...body
+  });
 
   res.json(success("ok", { appointment }, res.statusCode));
 };
