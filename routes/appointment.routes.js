@@ -11,7 +11,7 @@ const {
   getMyAppointments,
 } = require("../controllers/appointment.controller");
 
-const { hasRole, validateJWT, isAdminRole } = require("../middlewares");
+const { hasRole, validateJWT, isAdminRole, checkAppointmentConflicts, isBodyEmpty } = require("../middlewares");
 
 const {
   businessExists,
@@ -24,17 +24,18 @@ const router = Router();
 router.post(
   "/",
   [
+    isBodyEmpty,
     validateJWT,
     // hasRole("USER_ROLE", "ADMIN_ROLE"),
     check("business").isMongoId(),
     check("service_type").isMongoId(),
+    check("observations", 'El campo de observaciones debe ser de tipo \'String\'.').optional().isString(),
 
     check("business").custom(businessExists),
     check("service_type").custom(serviceTypeExists),
     check("date", "La fecha introducida es inválida.").isDate(),
     check("date", "La fecha introducida es menor a hoy.").custom(appointmentDateValidator),
 
-    check("observations").optional().isString(),
     crudValidator,
   ],
   storeAppointment
