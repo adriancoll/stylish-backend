@@ -37,7 +37,7 @@ const getUserBusiness = async (req = request, res = response) => {
 };
 
 const storeBusiness = async (req = request, res = response) => {
-  const { name, image, user_id, service_types } = req.body;
+  const { name, image, user_id, service_types, ...other } = req.body;
 
   const userQuery = { status: true, role: "BUSINESS_ROLE", _id: user_id };
 
@@ -70,6 +70,7 @@ const storeBusiness = async (req = request, res = response) => {
     image,
     user: user_id,
     service_types: $service_types,
+    ...other
   });
 
   business = await Business.findById(business._id)

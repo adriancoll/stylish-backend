@@ -5,6 +5,10 @@ const BusinessSchema = new Schema({
     type: String,
     required: [true, "El nombre es obligatorio."],
   },
+  employees: {
+    type: Number,
+    required: [true, "El número de empleados es obligatorio."]
+  },
   image: {
     type: String,
     default: true,
