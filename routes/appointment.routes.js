@@ -68,7 +68,7 @@ router.put(
 
 router.delete(
   "/:id",
-  [validateJWT, isAdminRole, crudValidator],
+  [validateJWT, crudValidator],
   deleteAppointment
 );
 

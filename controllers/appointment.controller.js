@@ -3,20 +3,19 @@ const { request } = require('express')
 const debug = require('../utils/debug')
 
 // Models
-const { Appointment } = require('../models')
+const { Appointment, Service_type } = require('../models')
 const { success, error } = require('../helpers')
 const { isEmpty } = require('lodash')
 const moment = require('moment')
 
 const storeAppointment = async (req = request, res = response) => {
   const { body, user } = req
-  const { business, service_type, date } = body
+  const { business, service_type, date, ...other } = body
 
   const appointmentExist = await Appointment.findOne({
     user: user._id,
     business,
     service_type,
-    date,
     status: {
       $in: ['PENDING_CONFIRM', 'CONFIRMED'],
     },
@@ -26,12 +25,15 @@ const storeAppointment = async (req = request, res = response) => {
     return res.status(400).json(error('Reserva duplicada', res.statusCode))
   }
 
-  /**
-   *  validate if has any other appointment at the range of hours based in the service.duration
-   * */
-  const appointment = await Appointment.findOne({
+  const { duration } = await Service_type.findById(service_type)
+
+  const appointment = await Appointment.create({
     business,
     date,
+    service_type,
+    user,
+    end_date: moment(date).add(duration, 'm'),
+    ...other,
   })
 
   console.log(appointment)
@@ -43,15 +45,19 @@ const deleteAppointment = async (req = request, res = response) => {
   const { id } = req.params
 
   try {
-    const appointment = await Appointment.findByIdAndUpdate(id, {
-      status: 'CANCELLED',
-    })
+    const appointment = await Appointment.findByIdAndUpdate(
+      id,
+      {
+        status: 'CANCELLED',
+      },
+      { new: true }
+    )
 
     return res.status(200).json(success('ok', { appointment }, res.statusCode))
   } catch (ex) {
     debug('Ha habido un error al eliminar la reserva.', 'error')
     return res.json(
-      error('Ha habido un error al eliminar la reserva.', {}, res.statusCode)
+      error('Ha habido un error al eliminar la reserva.', res.statusCode)
     )
   }
 }
@@ -59,7 +65,7 @@ const deleteAppointment = async (req = request, res = response) => {
 const getAllAppointments = async (req = request, res = response) => {
   const appointments = await Appointment.find()
 
-  res.json(appointments)
+  res.json(success('ok', { appointments }, res.statusCode))
 }
 
 const getMyAppointments = async (req = request, res = response) => {
@@ -115,7 +121,7 @@ const confirmAppointment = async (req = request, res = response) => {
     }
   )
 
-  res.json({ appointment })
+  res.json(success('ok', { appointment }, res.statusCode))
 }
 
 const updateAppointment = async (req = request, res = response) => {
