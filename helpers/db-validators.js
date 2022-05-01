@@ -5,7 +5,8 @@ const mongoose = require("mongoose");
 // Models
 const debug = require("../utils/debug");
 
-const { Business, Role, User } = require('../models')
+const { Business, Role, User, Service_type } = require('../models');
+const { isEmpty } = require("lodash");
 
 /**
  * Middleware to check if the role name exists on database
@@ -79,7 +80,6 @@ const businessExists = async (id) => {
     // Yes, it's a valid ObjectId, proceed with `findById` call.
     const exists = await Business.findById(id).populate("user");
 
-    console.log(exists)
     if (!exists) {
       debug(
         `La empresa con id: '${id}', no existe ó está deshabilitado.`,
@@ -102,11 +102,15 @@ const businessExists = async (id) => {
   }
 };
 
+/**
+ * Middleware to check if the serviceType exists on database
+ * @param {Number} id id of the business to validate
+ */
 const serviceTypeExists = async (id) => {
   if (id.match(/^[0-9a-fA-F]{24}$/)) {
     // Yes, it's a valid ObjectId, proceed with `findById` call.
-    const exists = await Category.findById(id);
-    if (!exists) {
+    const exists = await Service_type.findById(id);
+    if (isEmpty(exists)) {
       debug("¡Se ha intentado modificar una categoría que no existe!", "error");
       throw new Error(`La categoría con id: '${id}', no existe.`);
     }
@@ -125,6 +129,17 @@ const isObjectIdArray = function (values) {
   return isObjectIds;
 };
 
+/**
+ * Middleware to check if the date is granther than today's date
+ * @param {Date} date Date of the appointment
+ */
+const appointmentDateValidator = (date) => {
+  if (!moment(date).isValid() || moment().diff(date, 'days') < 0) {
+      debug("¡La fecha introducida es menor a hoy!", "error");
+      throw new Error("La fecha introducida es menor a hoy.")
+  }
+}
+
 const hashPassword = (pwd) => bcryptjs.hashSync(pwd, bcryptjs.genSaltSync());
 
 module.exports = {
@@ -136,4 +151,5 @@ module.exports = {
   businessExists,
   isObjectIdArray,
   userWithPhoneExists,
+  appointmentDateValidator
 };

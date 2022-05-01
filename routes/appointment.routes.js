@@ -16,8 +16,8 @@ const { hasRole, validateJWT, isAdminRole } = require("../middlewares");
 const {
   businessExists,
   serviceTypeExists,
-  userExists,
-} = require("../helpers/db-validators");
+  appointmentDateValidator,
+} = require("../helpers");
 
 const router = Router();
 
@@ -31,6 +31,8 @@ router.post(
 
     check("business").custom(businessExists),
     check("service_type").custom(serviceTypeExists),
+    check("date", "La fecha introducida es inválida.").isDate(),
+    check("date", "La fecha introducida es menor a hoy.").custom(appointmentDateValidator),
 
     check("observations").optional().isString(),
     crudValidator,

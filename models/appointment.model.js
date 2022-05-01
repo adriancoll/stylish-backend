@@ -27,6 +27,10 @@ const AppointmentSchema = new Schema(
       type: String,
       required: false,
     },
+    date: {
+      type: Date,
+      required: true
+    },
     status: {
       type: String,
       default: "PENDING_CONFIRM",
