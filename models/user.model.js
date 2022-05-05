@@ -17,7 +17,8 @@ const UserSchema = new Schema({
   },
   password: {
     type: String,
-    required: [true, "La contraseña es obligatoria."]
+    required: [true, "La contraseña es obligatoria."],
+    select: false
   },
   image: {
     type: String,

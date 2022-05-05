@@ -77,7 +77,7 @@ const storeBusiness = async (req = request, res = response) => {
     .populate("user", "-password")
     .populate("service_types", "-user -status -__v");
 
-  res.json(
+  return res.json(
     success(
       "ok",
       {
@@ -143,11 +143,11 @@ const updateBusiness = async (req = request, res = response) => {
       );
     }
 
-    res
+    return res
       .status(500)
       .json(error("Error al actualizar el negocio", {}, res.statusCode));
   } catch (e) {
-    res.json(error(e ?? "Error al actualizar el negocio", res.statusCode));
+    return res.json(error(e ?? "Error al actualizar el negocio", res.statusCode));
     debug(e, "error");
   }
 };
@@ -157,7 +157,7 @@ const getAllBusiness = async (_req = request, res = response) => {
     .populate("user", "-password -status -__v")
     .populate("service_types", "-user -status -__v");
 
-  res.json(success("OK", businesses, res.statusCode));
+  return res.json(success("OK", businesses, res.statusCode));
 };
 
 module.exports = {
