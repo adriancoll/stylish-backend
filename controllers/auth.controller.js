@@ -63,7 +63,7 @@ const login = async (req = request, res = response) => {
 
     if (business) {
       const appointments = await Appointment.find({ business: business._id })
-      console.log(appointments)
+
       return res.json(
         success(
           'ok',

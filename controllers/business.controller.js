@@ -123,8 +123,6 @@ const updateBusiness = async (req = request, res = response) => {
      */
     const $service_types = clearDuplicates(service_types);
 
-    console.log($service_types);
-
     business = await Business.findByIdAndUpdate(
       id,
       { ...data, service_types: $service_types },
