@@ -57,8 +57,7 @@ const login = async (req = request, res = response) => {
     const [token, business] = await Promise.all([
       generateJWT(user.id),
       Business.findOne({ user: user.id })
-        .populate('user', '-password -__v')
-        .populate('service_types', '-user -__v')
+        .populate('service_types', '-user -__v'),
     ])
 
     if (business) {
@@ -70,6 +69,7 @@ const login = async (req = request, res = response) => {
           {
             business,
             appointments,
+            user,
             token,
           },
           res.statusCode
