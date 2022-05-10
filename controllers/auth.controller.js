@@ -56,8 +56,10 @@ const login = async (req = request, res = response) => {
     // Generate JWT
     const [token, business] = await Promise.all([
       generateJWT(user.id),
-      Business.findOne({ user: user.id })
-        .populate('service_types', '-user -__v'),
+      Business.findOne({ user: user.id }).populate(
+        'service_types',
+        '-user -__v'
+      ),
     ])
 
     if (business) {
@@ -142,7 +144,18 @@ const googleSignIn = async (req = request, res = response) => {
   }
 }
 
+const refreshToken = (req = request, res = response) => {
+  res.json(
+    success(
+      'Token renovado 😎',
+      { old: req.header('x-token'), new: req.refreshToken },
+      res.statusCode
+    )
+  )
+}
+
 module.exports = {
   login,
   googleSignIn,
+  refreshToken,
 }
