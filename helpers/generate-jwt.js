@@ -12,7 +12,6 @@ const generateJWT = (uid = "") => {
       reject("No se a encontrado un la variable de entorno que contiene el JWTSecret...");
     }
 
-     console.log(uid)
     jwt.sign(
       payload,
       process.env.JWTSECRET,
