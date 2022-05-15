@@ -11,6 +11,7 @@ const AppointmentSchema = new Schema(
       ref: "Business",
       unique: true,
       required: true,
+      autopopulate: true
     },
     user: {
       type: Schema.Types.ObjectId,

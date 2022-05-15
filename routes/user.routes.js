@@ -15,7 +15,7 @@ const {
   userWithPhoneExists,
 } = require("../helpers/db-validators");
 
-const { crudValidator, isAdminRole, validateJWT } = require("../middlewares");
+const { crudValidator, isAdminRole, validateJWT, hasRole } = require("../middlewares");
 
 const router = Router();
 
@@ -50,7 +50,7 @@ router.post(
     check("password", "La contraseña debe tener más de 6 letras.").isLength({
       min: 6,
     }),
-    check("role").custom(isValidRole),
+    check("role").custom(isValidRole).optional(),
     crudValidator,
   ],
   userPost

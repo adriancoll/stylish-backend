@@ -4,6 +4,7 @@ const path = require("path");
 
 const User = require("../models/user.model");
 const { fileUpload, success } = require("../helpers");
+const { isEmpty } = require("lodash");
 
 const userGet = async (req = request, res = response) => {
   const {
@@ -30,10 +31,12 @@ const userGet = async (req = request, res = response) => {
   );
 };
 
-const userPost = async (req = request, res) => {
+const userPost = async (req = request, res = response) => {
   try {
-    const { name, email, role, password, image, phone_number } = req.body;
+    const { name, email, password, image, phone_number } = req.body;
+    const role = isEmpty(req.body.role) ? "USER_ROLE" : req.body.role;	
 
+    console.log("test de body - ", req.body)
     const user = new User({
       name,
       email,
