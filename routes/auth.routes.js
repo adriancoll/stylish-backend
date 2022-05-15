@@ -8,7 +8,7 @@ const { tokenRefresh } = require("../middlewares");
 const router = Router();
 
 router.post('/login', [
-    check('email', 'El correo es obligatorio para iniciar sesión').isEmail().normalizeEmail(),
+    check('email', 'El correo es obligatorio para iniciar sesión').isEmail(),
     check('password', 'Debes introducir una contraseña').not().isEmpty().trim(),
     crudValidator
 ], login)
