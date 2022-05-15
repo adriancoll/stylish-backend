@@ -43,9 +43,7 @@ router.post(
     check("name", "El nombre es obligatorio.").notEmpty(),
     check("email", "El correo no es válido.").isEmail(),
     check("email").custom(emailExists),
-    check("phone_number", "El número de teléfono no es válido.").isMobilePhone(
-      "es-ES"
-    ),
+    check("phone_number", "El número de teléfono no es válido.").isString(),
     check("phone_number").custom(userWithPhoneExists),
     check("password", "La contraseña debe tener más de 6 letras.").isLength({
       min: 6,
