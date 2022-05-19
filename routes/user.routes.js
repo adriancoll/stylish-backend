@@ -30,8 +30,8 @@ router.post(
     check("role").custom(isValidRole).optional(),
     check("phone_number", "El número de teléfono no es válido.").isMobilePhone(
       "es-ES"
-    ),
-    check("phone_number").custom(userWithPhoneExists),
+    ).optional(),
+    check("phone_number").custom(userWithPhoneExists).optional(),
     crudValidator,
   ],
   userUpdate
