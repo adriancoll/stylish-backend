@@ -6,13 +6,14 @@
   "scripts": {
     "start": "node app",
     "dev": "nodemon app",
-    "secret:generate": "node -e \"console.log(require('crypto').randomBytes(256).toString('base64'));\""
+    "secret:generate": "node -e \"console.log('¡Copia el siguiente token y pegalo en el .env =>', require('crypto').randomBytes(256).toString('base64'));\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cloudinary": "^1.30.0",
     "colors": "^1.4.0",
     "cors": "2.8.5",
     "dotenv": "10.0.0",
@@ -24,6 +25,7 @@
     "lodash": "^4.17.21",
     "moment": "^2.29.2",
     "mongoose": "^6.2.10",
+    "mongoose-autopopulate": "^0.16.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

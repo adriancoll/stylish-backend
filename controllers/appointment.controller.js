@@ -36,8 +36,6 @@ const storeAppointment = async (req = request, res = response) => {
     ...other,
   })
 
-  console.log(appointment)
-
   res.json(success('ok', { appointment }, res.statusCode))
 }
 

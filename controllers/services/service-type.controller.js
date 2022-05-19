@@ -2,7 +2,7 @@ const { request, response } = require("express");
 const debug = require("../../utils/debug");
 
 const ServiceType = require("../../models/services/service-type.model");
-const { success } = require("../../helpers");
+const { success, error } = require("../../helpers");
 
 const getAllServiceType = async (req = request, res = response) => {
   const service_types = await ServiceType.find({ status: true });
@@ -24,28 +24,23 @@ const storeServiceType = async (req = request, res = response) => {
     duration,
   };
 
-  const alreadyExists = await ServiceType.findOne({ name });
+  const alreadyExists = await ServiceType.findOne({ name: name.toUpperCase() });
 
   if (alreadyExists) {
-    return res.json({
-      msg: `Ya existe el tipo de servicio con nombre ${name}!`,
-    });
+    return res.json(
+      error(`Ya existe el tipo de servicio con nombre ${name}!`, res.statusCode)
+    );
   }
 
-  const service_type = new ServiceType(payload);
+  const service_type = await ServiceType.create(payload);
 
-  await service_type.save();
-
-  res.json({
-    ok: true,
-    service_type,
-  });
+  res.json(success("ok", { ...service_type }, res.statusCode));
 };
 
 const updateServiceType = (req = request, res = response) => {
   const { id } = req.params;
 
-  res.json({ id });
+  res.json(success("ok", { id }, res.statusCode));
 };
 
 const deleteServiceType = async (req = request, res = response) => {
@@ -59,10 +54,7 @@ const deleteServiceType = async (req = request, res = response) => {
     { new: true }
   );
 
-  res.json({
-    ok: true,
-    service_type,
-  });
+  res.json(success("ok", { service_type }, res.statusCode));
 };
 
 module.exports = {

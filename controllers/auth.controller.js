@@ -14,7 +14,7 @@ const login = async (req = request, res = response) => {
     const { email, password } = req.body
 
     // validate if already registered
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ email }).select('+password')
 
     if (!user) {
       res
@@ -64,7 +64,7 @@ const login = async (req = request, res = response) => {
 
     if (business) {
       const appointments = await Appointment.find({ business: business._id })
-      console.log(appointments)
+
       return res.json(
         success(
           'ok',

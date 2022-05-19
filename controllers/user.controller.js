@@ -1,10 +1,15 @@
 const { response, request } = require("express");
 const { hashPassword } = require("../helpers/db-validators");
-const path = require("path");
+
+const cloudinary = require("cloudinary");
 
 const User = require("../models/user.model");
+<<<<<<< HEAD
 const { fileUpload, success } = require("../helpers");
 const { isEmpty } = require("lodash");
+=======
+const { fileUpload, success, error } = require("../helpers");
+>>>>>>> 29969130b3e7854213593d91f725061a0ea92d3a
 
 const userGet = async (req = request, res = response) => {
   const {
@@ -82,13 +87,27 @@ const userUpdate = async (req = request, res = response) => {
   // Defragment for excluding form normal validation
   const { _id, password, google, email, image, ...other } = req.body;
 
-  if (req.files && Object.keys(files).length > 0) {
-    const imagePath = await fileUpload(req.files);
-    user = await User.findByIdAndUpdate(
-      id,
-      { image: imagePath },
-      { new: true }
-    );
+  /**
+   * Documentacion de cloudinary
+   * @url https://cloudinary.com/documentation/node_image_and_video_upload
+   * */
+  if (req.files && Object.keys(req.files).length > 0) {
+    try {
+      const { tempFilePath } = req.files.file;
+      const { secure_url } = await cloudinary.v2.uploader.upload(tempFilePath);
+
+      user = await User.findByIdAndUpdate(id, {
+        image: secure_url,
+      });
+    } catch (ex) {
+      return res.json(
+        error(
+          "No se ha podido actualizar tu imágen, contacta a un administrador",
+          500,
+          ex
+        )
+      );
+    }
   }
 
   // If wants to change it's password

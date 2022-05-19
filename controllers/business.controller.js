@@ -1,10 +1,11 @@
-const { response, request } = require('express')
-const { isObjectIdArray } = require('../helpers/db-validators')
-const debug = require('../utils/debug')
+const { response, request } = require("express");
+const debug = require("../utils/debug");
 
-const Business = require('../models/business.model')
-const User = require('../models/user.model')
-const { clearDuplicates } = require('../utils/functions')
+const cloudinary = require("cloudinary");
+
+const Business = require("../models/business.model");
+const User = require("../models/user.model");
+const { clearDuplicates } = require("../utils/functions");
 
 const { error, success, fileUpload } = require('../helpers')
 const { json } = require('express/lib/response')
@@ -72,13 +73,13 @@ const storeBusiness = async (req = request, res = response) => {
     user: user_id,
     service_types: $service_types,
     ...other,
-  })
+  });
 
   business = await Business.findById(business._id)
     .populate('user', '-password')
     .populate('service_types', '-user -status -__v')
 
-  res.json(
+  return res.json(
     success(
       'ok',
       {
@@ -94,25 +95,29 @@ const updateBusiness = async (req = request, res = response) => {
     let business
     const { id } = req.params
 
-    const { files } = req
+    const { files } = req;
+
     if (files && Object.keys(files).length > 0) {
-      const imagePath = await fileUpload(files)
+      try {
+        const { tempFilePath } = files.file;
+        const { secure_url } = await cloudinary.v2.uploader.upload(
+          tempFilePath
+        );
 
-      business = await Business.findByIdAndUpdate(
-        id,
-        { image: imagePath },
-        { new: true }
-      )
-
-      return res.json(
-        success(
-          'Se ha añadido la imágen correctamente',
-          {
-            business,
-          },
-          res.statusCode
-        )
-      )
+        business = await Business.findByIdAndUpdate(
+          id,
+          { image: secure_url },
+          { new: true }
+        );
+      } catch (ex) {
+        return res.json(
+          error(
+            "No se ha podido actualizar tu imágen, contacta a un administrador",
+            500,
+            ex
+          )
+        );
+      }
     }
 
     const { service_types, ...data } = req.body
@@ -123,8 +128,6 @@ const updateBusiness = async (req = request, res = response) => {
      * just make a set of unique values
      */
     const $service_types = clearDuplicates(service_types)
-
-    console.log($service_types)
 
     business = await Business.findByIdAndUpdate(
       id,
@@ -146,7 +149,7 @@ const updateBusiness = async (req = request, res = response) => {
       )
     }
 
-    res
+    return res
       .status(500)
       .json(error('Error al actualizar el negocio', {}, res.statusCode))
   } catch (e) {

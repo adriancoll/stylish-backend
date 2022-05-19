@@ -2,6 +2,7 @@ const { Schema, model } = require("mongoose");
 
 const options = {
   timestamps: true,
+  selectPopulatedPaths: true
 };
 
 const AppointmentSchema = new Schema(
@@ -11,18 +12,20 @@ const AppointmentSchema = new Schema(
       ref: "Business",
       unique: true,
       required: true,
-      autopopulate: true
+      autopopulate: true,
     },
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",
       unique: true,
       required: true,
+      autopopulate: true,
     },
     service_type: {
       type: Schema.Types.ObjectId,
       ref: "Service-Type",
       required: true,
+      autopopulate: true,
     },
     observations: {
       type: String,
@@ -44,6 +47,7 @@ const AppointmentSchema = new Schema(
   },
   options
 );
+AppointmentSchema.plugin(require('mongoose-autopopulate'));
 
 // Modify the model we get when we query any user to abstract some useless data for frontend
 AppointmentSchema.methods.toJSON = function () {
