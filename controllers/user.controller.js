@@ -87,7 +87,7 @@ const userUpdate = async (req = request, res = response) => {
   if (req.files && Object.keys(req.files).length > 0) {
     try {
       const { tempFilePath } = req.files.file;
-      const { secure_url } = await cloudinary.v2.uploader.upload("asdasdsadas");
+      const { secure_url } = await cloudinary.v2.uploader.upload(tempFilePath);
 
       user = await User.findByIdAndUpdate(id, {
         image: secure_url,
