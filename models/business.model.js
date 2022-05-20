@@ -13,6 +13,10 @@ const BusinessSchema = new Schema({
     type: Number,
     default: 0,
   },
+  rating: {
+    type: Number,
+    default: 0,
+  },
   employees: {
     type: Number,
     required: [true, 'El número de empleados es obligatorio.'],

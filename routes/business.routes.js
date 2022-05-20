@@ -90,7 +90,7 @@ router.post(
     check('id', 'No existe el negocio que estás intentandon editar.').custom(
       businessExists
     ),
-    check('starts', 'Número inválido!').isFloat({ min: 1, max: 5 }),
+    check('stars', 'Número inválido!').isFloat({ min: 0, max: 5 }),
     crudValidator,
   ],
   addFeedback
