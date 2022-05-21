@@ -10,14 +10,12 @@ const AppointmentSchema = new Schema(
     business: {
       type: Schema.Types.ObjectId,
       ref: "Business",
-      unique: true,
       required: true,
       autopopulate: true,
     },
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      unique: true,
       required: true,
       autopopulate: true,
     },

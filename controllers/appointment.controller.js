@@ -16,6 +16,7 @@ const storeAppointment = async (req = request, res = response) => {
     user: user._id,
     business,
     service_type,
+    date,
     status: {
       $in: ['PENDING_CONFIRM', 'CONFIRMED'],
     },
@@ -135,6 +136,28 @@ const updateAppointment = async (req = request, res = response) => {
   res.json({ appointment })
 }
 
+const getNextAppointment = async (req = request, res = response) => {
+  const { user } = req
+
+  const isoDate = moment()
+
+  const appointment = await Appointment.find({
+    user: user._id,
+    date: { $gte: isoDate },
+    status: {
+      $in: ['PENDING_CONFIRM', 'CONFIRMED'],
+    },
+  })
+    .sort({ time: 1 })
+    .limit(1)
+
+  if (isEmpty(appointment)) {
+    return res.status(400).json(error('No hay reservas', res.statusCode))
+  }
+
+  res.json(success('ok', { appointment }, res.statusCode))
+}
+
 module.exports = {
   storeAppointment,
   deleteAppointment,
@@ -142,4 +165,5 @@ module.exports = {
   confirmAppointment,
   updateAppointment,
   getMyAppointments,
+  getNextAppointment,
 }

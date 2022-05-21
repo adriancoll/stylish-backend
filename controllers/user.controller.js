@@ -4,12 +4,8 @@ const { hashPassword } = require("../helpers/db-validators");
 const cloudinary = require("cloudinary");
 
 const User = require("../models/user.model");
-<<<<<<< HEAD
-const { fileUpload, success } = require("../helpers");
+const { success, error } = require("../helpers");
 const { isEmpty } = require("lodash");
-=======
-const { fileUpload, success, error } = require("../helpers");
->>>>>>> 29969130b3e7854213593d91f725061a0ea92d3a
 
 const userGet = async (req = request, res = response) => {
   const {

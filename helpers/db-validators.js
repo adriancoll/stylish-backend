@@ -116,7 +116,7 @@ const serviceTypeExists = async (id) => {
     const exists = await Service_type.findById(id)
     if (isEmpty(exists)) {
       debug('¡Se ha intentado modificar una categoría que no existe!', 'error')
-      throw new Error(`La categoría con id: '${id}', no existe.`)
+      throw new Error(`El servicio con id: '${id}', no existe.`)
     }
   }
 }
