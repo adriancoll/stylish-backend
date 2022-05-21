@@ -39,7 +39,7 @@ const getUserBusiness = async (req = request, res = response) => {
 }
 
 const storeBusiness = async (req = request, res = response) => {
-  const { name, image, user_id, service_types, ...other } = req.body
+  const { name, image, user_id, service_types, rating, ...other } = req.body
 
   const userQuery = { status: true, role: 'BUSINESS_ROLE', _id: user_id }
 
@@ -120,7 +120,7 @@ const updateBusiness = async (req = request, res = response) => {
       }
     }
 
-    const { service_types, ...data } = req.body
+    const { service_types, rating: _rating, ...data } = req.body
 
     /**
      * Clear duplicated values in case of API
@@ -180,6 +180,7 @@ const addFeedback = async (req = request, res = response) => {
 
   business.total_stars = business.total_stars + stars
   business.total_users_feedback = business.total_users_feedback + 1
+  business.rating = business.total_stars / business.total_users_feedback
 
   await business.save()
 
