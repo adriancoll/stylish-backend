@@ -1,11 +1,11 @@
-const { response, request } = require("express");
-const debug = require("../utils/debug");
+const { response, request } = require('express')
+const debug = require('../utils/debug')
 
-const cloudinary = require("cloudinary");
+const cloudinary = require('cloudinary')
 
-const Business = require("../models/business.model");
-const User = require("../models/user.model");
-const { clearDuplicates } = require("../utils/functions");
+const Business = require('../models/business.model')
+const User = require('../models/user.model')
+const { clearDuplicates } = require('../utils/functions')
 
 const { error, success, fileUpload } = require('../helpers')
 const { json } = require('express/lib/response')
@@ -73,7 +73,7 @@ const storeBusiness = async (req = request, res = response) => {
     user: user_id,
     service_types: $service_types,
     ...other,
-  });
+  })
 
   business = await Business.findById(business._id)
     .populate('user', '-password')
@@ -95,28 +95,26 @@ const updateBusiness = async (req = request, res = response) => {
     let business
     const { id } = req.params
 
-    const { files } = req;
+    const { files } = req
 
     if (files && Object.keys(files).length > 0) {
       try {
-        const { tempFilePath } = files.file;
-        const { secure_url } = await cloudinary.v2.uploader.upload(
-          tempFilePath
-        );
+        const { tempFilePath } = files.file
+        const { secure_url } = await cloudinary.v2.uploader.upload(tempFilePath)
 
         business = await Business.findByIdAndUpdate(
           id,
           { image: secure_url },
           { new: true }
-        );
+        )
       } catch (ex) {
         return res.json(
           error(
-            "No se ha podido actualizar tu imágen, contacta a un administrador",
+            'No se ha podido actualizar tu imágen, contacta a un administrador',
             500,
             ex
           )
-        );
+        )
       }
     }
 
@@ -187,10 +185,25 @@ const addFeedback = async (req = request, res = response) => {
   return res.json(success('OK', { business }, res.statusCode))
 }
 
+const getPopularBusiness = async (_req = request, res = response) => {
+  const businesses = await Business.find()
+    .populate('user', '-password -status -__v')
+    .populate('service_types', '-user -status -__v')
+    .sort([
+      ['total_users_feedback', 'desc'],     
+      ['total_stars', 'desc'],
+      ['rating', 'desc'],
+    ])
+    .limit(8)
+
+  res.json(success('OK', businesses, res.statusCode))
+}
+
 module.exports = {
   getUserBusiness,
   storeBusiness,
   updateBusiness,
   getAllBusiness,
   addFeedback,
+  getPopularBusiness,
 }

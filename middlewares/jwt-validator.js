@@ -57,9 +57,6 @@ const tokenRefresh = async (req = request, res = response, next) => {
       .status(401)
       .json(error('Token inválido o su sesión a expirado.', res.statusCode))
   }
-
-  // return res.status(401).send("Can't refresh. Invalid Token")
-  next()
 }
 
 const validateJWT = async (req = request, res = response, next) => {

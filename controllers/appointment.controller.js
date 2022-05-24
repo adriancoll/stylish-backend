@@ -47,7 +47,7 @@ const deleteAppointment = async (req = request, res = response) => {
     const appointment = await Appointment.findByIdAndUpdate(
       id,
       {
-        status: 'CANCELLED',
+        status: 'CANCELED',
       },
       { new: true }
     )
@@ -91,8 +91,8 @@ const getMyAppointments = async (req = request, res = response) => {
     COMPLETED: appointments.filter(
       (appointment) => appointment.status === 'COMPLETED'
     ),
-    CANCELLED: appointments.filter(
-      (appointment) => appointment.status === 'CANCELLED'
+    CANCELED: appointments.filter(
+      (appointment) => appointment.status === 'CANCELED'
     ),
   }
 
@@ -141,18 +141,17 @@ const getNextAppointment = async (req = request, res = response) => {
 
   const isoDate = moment()
 
-  const appointment = await Appointment.find({
+  const appointment = await Appointment.findOne({
     user: user._id,
     date: { $gte: isoDate },
     status: {
-      $in: ['PENDING_CONFIRM', 'CONFIRMED'],
+      $in: ['PENDING_CONFIRM', 'CONFIRMED', 'CANCELED'],
     },
   })
     .sort({ time: 1 })
-    .limit(1)
 
   if (isEmpty(appointment)) {
-    return res.status(400).json(error('No hay reservas', res.statusCode))
+    return res.status(201).json(success('No hay reservas', {}, res.statusCode))
   }
 
   res.json(success('ok', { appointment }, res.statusCode))

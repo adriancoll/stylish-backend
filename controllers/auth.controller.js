@@ -144,13 +144,28 @@ const googleSignIn = async (req = request, res = response) => {
   }
 }
 
-const refreshToken = (req = request, res = response) => {
-  res.json(
-    success(
-      'Token renovado 😎',
-      { old: req.header('x-token'), new: req.refreshToken },
-      res.statusCode
-    )
+const refreshToken = async (req = request, res = response) => {
+  const { user } = req
+
+  const payload = {
+    user,
+    token: req.refreshToken,
+  }
+
+  const business = await Business.findOne({ user: user.id }).populate(
+    'service_types',
+    '-user -__v'
+  )
+
+  if (business) {
+    payload.appointments = await Appointment.find({ business: business._id })
+    payload.business = business
+  } else {
+    payload.appointments = await Appointment.find({ user: user.id })
+  }
+
+  return res.json(
+    success('Usuario, Token renovado 😎', payload, res.statusCode)
   )
 }
 

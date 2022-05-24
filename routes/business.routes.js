@@ -7,6 +7,7 @@ const {
   updateBusiness,
   getAllBusiness,
   addFeedback,
+  getPopularBusiness,
 } = require('../controllers/business.controller')
 
 const {
@@ -95,5 +96,7 @@ router.post(
   ],
   addFeedback
 )
+
+router.post('/popular/all', [], getPopularBusiness)
 
 module.exports = router
