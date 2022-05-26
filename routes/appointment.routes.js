@@ -45,7 +45,7 @@ router.post(
 
     check('business').custom(businessExists),
     check('service_type').custom(serviceTypeExists),
-    check('date', 'La fecha introducida es inválida.').isISO8601().toDate(),
+    check('date', 'La fecha introducida es inválida.').isString(),
     check('date', 'La fecha introducida es menor a hoy.').custom(
       appointmentDateValidator
     ),

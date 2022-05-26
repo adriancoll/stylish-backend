@@ -30,6 +30,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "node-cron": "^3.0.0",
     "nodemon": "^2.0.15",
     "prettier": "^2.6.2"
   }

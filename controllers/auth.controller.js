@@ -134,10 +134,16 @@ const googleSignIn = async (req = request, res = response) => {
     // Generate JWT
     const token = await generateJWT(user.id)
 
-    res.json({
-      user,
-      token,
-    })
+    res.json(
+      success(
+        'ok',
+        {
+          user,
+          token,
+        },
+        res.statusCode
+      )
+    )
   } catch (error) {
     res.status(400).json({
       ok: false,

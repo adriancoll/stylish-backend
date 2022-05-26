@@ -142,12 +142,12 @@ const appointmentDateValidator = (date) => {
     throw new Error('La fecha introducida es invalida.')
   }
 
-  if (moment().diff(date, 'days') > 0) {
+  if (moment(date).isBefore(moment())) {
     debug('¡La fecha introducida es menor a hoy! '+ moment().diff(date, 'days'), 'error')
-    throw new Error('La fecha introducida es menor a hoy.')
+    throw new Error('La fecha introducida es menor a ahora.')
   }
 
-  return date
+  return moment(date)
 }
 
 const hashPassword = (pwd) => bcryptjs.hashSync(pwd, bcryptjs.genSaltSync())

@@ -1,5 +1,6 @@
 const { response } = require('express')
 const { request } = require('express')
+const cron = require('node-cron')
 const debug = require('../utils/debug')
 
 // Models
@@ -36,6 +37,24 @@ const storeAppointment = async (req = request, res = response) => {
     end_date: moment(date).add(duration, 'm'),
     ...other,
   })
+
+  debug(
+    cron.validate(`0 ${moment(date).minute()} ${moment(date).hour()} ${moment(date).day()} ${moment(date).month()} *`)
+  )
+
+  debug(new Date(date).toDateString() )
+  cron.schedule(
+    `0 ${moment(date).minute()} ${moment(date).hour()} * * *`,
+    async () => {
+      debug('Checking if the appointment is completed', 'info')
+      console.log(date)
+      if (appointment.status === 'PENDING') {
+        debug('THE APPOINTMENT HAS TIMED OUT, CANCELING IT ...', 'warning')
+        appointment.status = 'CANCELLED'
+        appointment.save()
+      }
+    }
+  )
 
   res.json(success('ok', { appointment }, res.statusCode))
 }
@@ -113,7 +132,7 @@ const confirmAppointment = async (req = request, res = response) => {
   const appointment = await Appointment.findOneAndUpdate(
     {
       _id: id,
-      status: 'PENDING_CONFIRM'
+      status: 'PENDING_CONFIRM',
     },
     {
       status: 'CONFIRMED',
@@ -124,7 +143,11 @@ const confirmAppointment = async (req = request, res = response) => {
   )
 
   if (!appointment) {
-    return res.status(400).json(error('La reseva no existe, o ya ha sido confirmada', res.statusCode))
+    return res
+      .status(400)
+      .json(
+        error('La reseva no existe, o ya ha sido confirmada', res.statusCode)
+      )
   }
 
   res.json(success('ok', { appointment }, res.statusCode))
