@@ -32,8 +32,10 @@ const login = async (req = request, res = response) => {
       res
         .status(400)
         .json(
-          'El usuario con el que intentas entrar a sido bloqueado. Contacta con un administrador.',
-          res.statusCode
+          error(
+            'El usuario con el que intentas entrar ha sido bloqueado. Contacta con un administrador.',
+            res.statusCode
+          )
         )
       return
     }

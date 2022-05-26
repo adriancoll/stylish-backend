@@ -111,7 +111,10 @@ const confirmAppointment = async (req = request, res = response) => {
   const { id } = req.params
 
   const appointment = await Appointment.findOneAndUpdate(
-    id,
+    {
+      _id: id,
+      status: 'PENDING_CONFIRM'
+    },
     {
       status: 'CONFIRMED',
     },
@@ -119,6 +122,10 @@ const confirmAppointment = async (req = request, res = response) => {
       new: true,
     }
   )
+
+  if (!appointment) {
+    return res.status(400).json(error('La reseva no existe, o ya ha sido confirmada', res.statusCode))
+  }
 
   res.json(success('ok', { appointment }, res.statusCode))
 }
@@ -147,8 +154,7 @@ const getNextAppointment = async (req = request, res = response) => {
     status: {
       $in: ['PENDING_CONFIRM', 'CONFIRMED', 'CANCELED'],
     },
-  })
-    .sort({ time: 1 })
+  }).sort({ time: 1 })
 
   if (isEmpty(appointment)) {
     return res.status(201).json(success('No hay reservas', {}, res.statusCode))

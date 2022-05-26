@@ -47,6 +47,11 @@ const BusinessSchema = new Schema({
     unique: true,
     required: true,
   },
+  description: {
+    type: String,
+    required: [true, 'La descripción es obligatoria.'],
+    maxlength: [255, 'La descripción no puede tener más de 255 caracteres.'],
+  },
 })
 
 // Modify the model we get when we query any user to abstract some useless data for frontend

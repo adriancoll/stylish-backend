@@ -37,7 +37,6 @@ const userPost = async (req = request, res = response) => {
     const { name, email, password, image, phone_number } = req.body;
     const role = isEmpty(req.body.role) ? "USER_ROLE" : req.body.role;	
 
-    console.log("test de body - ", req.body)
     const user = new User({
       name,
       email,
