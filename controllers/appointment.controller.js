@@ -1,6 +1,6 @@
 const { response } = require('express')
 const { request } = require('express')
-const cron = require('node-cron')
+const schedule = require('node-schedule')
 const debug = require('../utils/debug')
 
 // Models
@@ -8,6 +8,7 @@ const { Appointment, Service_type } = require('../models')
 const { success, error } = require('../helpers')
 const { isEmpty } = require('lodash')
 const moment = require('moment')
+const { check } = require('prettier')
 
 const storeAppointment = async (req = request, res = response) => {
   const { body, user } = req
@@ -38,23 +39,28 @@ const storeAppointment = async (req = request, res = response) => {
     ...other,
   })
 
-  debug(
-    cron.validate(`0 ${moment(date).minute()} ${moment(date).hour()} ${moment(date).day()} ${moment(date).month()} *`)
-  )
+  const rule = new schedule.RecurrenceRule()
 
-  debug(new Date(date).toDateString() )
-  cron.schedule(
-    `0 ${moment(date).minute()} ${moment(date).hour()} * * *`,
-    async () => {
-      debug('Checking if the appointment is completed', 'info')
-      console.log(date)
-      if (appointment.status === 'PENDING') {
-        debug('THE APPOINTMENT HAS TIMED OUT, CANCELING IT ...', 'warning')
-        appointment.status = 'CANCELLED'
-        appointment.save()
-      }
+  rule.year = moment(date).year()
+  rule.month = moment(date).month()
+  rule.date = moment(date).date()
+  rule.hour = moment(date).hours()
+  rule.minute = moment(date).minutes()
+  rule.second = moment(date).seconds()
+  rule.tz = 'Europe/Madrid'
+
+  schedule.scheduleJob(rule, async () => {
+    debug(`Checking if the appointment ${appointment._id} is completed`, 'info')
+
+    if (appointment.status === 'PENDING_CONFIRM') {
+      debug('THE APPOINTMENT HAS TIMED OUT, CANCELING IT ...', 'warning')
+      appointment.status = 'TIMEOUT'
+      await appointment.save()
+      return
     }
-  )
+
+    debug(`The appointment was ${appointment._id} completed successfully.`, 'info')
+  })
 
   res.json(success('ok', { appointment }, res.statusCode))
 }
@@ -113,6 +119,9 @@ const getMyAppointments = async (req = request, res = response) => {
     CANCELED: appointments.filter(
       (appointment) => appointment.status === 'CANCELED'
     ),
+    TIMEOUT: appointments.filter(
+      (appointment) => appointment.status === 'TIMEOUT'
+    )
   }
 
   res.json(

@@ -40,7 +40,7 @@ const AppointmentSchema = new Schema(
     status: {
       type: String,
       default: "PENDING_CONFIRM",
-      emun: ["PENDING_CONFIRM", "CONFIRMED", "COMPLETED", "CANCELED"],
+      emun: ["PENDING_CONFIRM", "CONFIRMED", "COMPLETED", "CANCELED", "TIMEOUT"],
     },
   },
   options
