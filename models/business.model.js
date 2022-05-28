@@ -39,6 +39,7 @@ const BusinessSchema = new Schema({
       ref: 'Service-Type',
       default: [],
       unique: true,
+      autopopulate: true
     },
   ],
   user: {
@@ -46,6 +47,7 @@ const BusinessSchema = new Schema({
     ref: 'User',
     unique: true,
     required: true,
+    autopopulate: true
   },
   description: {
     type: String,

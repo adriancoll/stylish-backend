@@ -172,7 +172,7 @@ const updateAppointment = async (req = request, res = response) => {
     .populate('user', '-password')
     .populate('business')
 
-  res.json({ appointment })
+  res.json(success('Reserva actualizada correctamente', { appointment }, res.statusCode))
 }
 
 const getNextAppointment = async (req = request, res = response) => {

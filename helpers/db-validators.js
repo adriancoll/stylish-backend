@@ -44,12 +44,12 @@ const emailExists = async (email = '') => {
  * Middleware to check if the email exists on database
  * @param {String} email to validate
  */
-const userWithPhoneExists = async (phoneNumber = '') => {
-  const existePhoneNumber = await User.findOne({ phone_number: phoneNumber })
+const userWithPhoneExists = async (phone_number = '') => {
+  const existePhoneNumber = await User.findOne({ phone_number })
 
   if (existePhoneNumber) {
     throw new Error(
-      `El número de teléfono '${phoneNumber}', ya está registrado.`
+      `El número de teléfono '${phone_number}', ya está registrado.`
     )
   }
 }

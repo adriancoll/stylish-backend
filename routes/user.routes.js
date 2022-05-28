@@ -33,10 +33,7 @@ router.post(
     check("id", "No es un id válido").isMongoId(),
     check("id").custom(userExists),
     check("role").custom(isValidRole).optional(),
-    check("phone_number", "El número de teléfono no es válido.").isMobilePhone(
-      "es-ES"
-    ).optional(),
-    check("phone_number").custom(userWithPhoneExists).optional(),
+    check('phone_number', 'El número de teléfono no es válido.').isString().optional(),
     crudValidator,
   ],
   userUpdate

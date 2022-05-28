@@ -127,13 +127,12 @@ const updateBusiness = async (req = request, res = response) => {
      */
     const $service_types = clearDuplicates(service_types)
 
-    business = await Business.findByIdAndUpdate(
-      id,
-      { ...data, service_types: $service_types },
-      {
-        new: true,
-      }
-    )
+    business = await Business.findByIdAndUpdate(id, {
+      ...data,
+      service_types: $service_types,
+    })
+      .populate('user', '-password -__v')
+      .populate('service_types', '-user -__v')
 
     if (business) {
       return res.json(
@@ -190,7 +189,7 @@ const getPopularBusiness = async (_req = request, res = response) => {
     .populate('user', '-password -status -__v')
     .populate('service_types', '-user -status -__v')
     .sort([
-      ['total_users_feedback', 'desc'],     
+      ['total_users_feedback', 'desc'],
       ['total_stars', 'desc'],
       ['rating', 'desc'],
     ])
