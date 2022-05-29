@@ -59,7 +59,10 @@ const storeAppointment = async (req = request, res = response) => {
       return
     }
 
-    debug(`The appointment was ${appointment._id} completed successfully.`, 'info')
+    debug(
+      `The appointment was ${appointment._id} completed successfully.`,
+      'info'
+    )
   })
 
   res.json(success('ok', { appointment }, res.statusCode))
@@ -121,7 +124,7 @@ const getMyAppointments = async (req = request, res = response) => {
     ),
     TIMEOUT: appointments.filter(
       (appointment) => appointment.status === 'TIMEOUT'
-    )
+    ),
   }
 
   res.json(
@@ -172,7 +175,13 @@ const updateAppointment = async (req = request, res = response) => {
     .populate('user', '-password')
     .populate('business')
 
-  res.json(success('Reserva actualizada correctamente', { appointment }, res.statusCode))
+  res.json(
+    success(
+      'Reserva actualizada correctamente',
+      { appointment },
+      res.statusCode
+    )
+  )
 }
 
 const getNextAppointment = async (req = request, res = response) => {
@@ -186,7 +195,8 @@ const getNextAppointment = async (req = request, res = response) => {
     status: {
       $in: ['PENDING_CONFIRM', 'CONFIRMED', 'CANCELED'],
     },
-  }).sort({ time: 1 })
+  })
+  .sort({ date: 1 })
 
   if (isEmpty(appointment)) {
     return res.status(201).json(success('No hay reservas', {}, res.statusCode))
