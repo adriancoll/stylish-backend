@@ -39,7 +39,7 @@ const BusinessSchema = new Schema({
       ref: 'Service-Type',
       default: [],
       unique: true,
-      autopopulate: true
+      autopopulate: true,
     },
   ],
   user: {
@@ -47,7 +47,7 @@ const BusinessSchema = new Schema({
     ref: 'User',
     unique: true,
     required: true,
-    autopopulate: true
+    autopopulate: true,
   },
   description: {
     type: String,
@@ -58,7 +58,14 @@ const BusinessSchema = new Schema({
 
 // Modify the model we get when we query any user to abstract some useless data for frontend
 BusinessSchema.methods.toJSON = function () {
-  const { __v, _id, ...type } = this.toObject()
+  const { __v, _id, service_types, ...type } = this.toObject()
+  
+  type.service_types = service_types.map((service_type) => {
+    service_type.uid = service_type._id.toString()
+    delete service_type._id
+    return service_type
+  })
+
   type.uid = _id
   return type
 }
