@@ -144,7 +144,7 @@ const appointmentDateValidator = (date) => {
 
   if (moment(date).isBefore(moment())) {
     debug('¡La fecha introducida es menor a hoy! '+ moment().diff(date, 'days'), 'error')
-    throw new Error('La fecha introducida es menor a ahora.')
+    throw new Error('La fecha introducida debe ser superior a la actual.')
   }
 
   return moment(date)
