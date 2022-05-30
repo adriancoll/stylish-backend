@@ -96,18 +96,20 @@ const getAllAppointments = async (req = request, res = response) => {
 }
 
 const getMyAppointments = async (req = request, res = response) => {
-  let appointments
+  let appointments, payload
 
   const { business_id } = req.body
 
   if (!business_id) {
     const { id } = req.user
-    appointments = await Appointment.find({ user: id })
+    payload = { user: id }
   } else {
-    appointments = await Appointment.find({
-      business: business_id,
-    })
+    payload = { business: business_id }
   }
+  
+  appointments = await Appointment.find(payload)
+    .deepPopulate('business.service_types')
+    .sort({ date: 'desc' })
 
   const filteredAppointments = {
     PENDING_CONFIRM: appointments.filter(
@@ -196,7 +198,8 @@ const getNextAppointment = async (req = request, res = response) => {
       $in: ['PENDING_CONFIRM', 'CONFIRMED', 'CANCELED'],
     },
   })
-  .sort({ date: 1 })
+    .sort({ date: 1 })
+    .deepPopulate('business.service_types')
 
   if (isEmpty(appointment)) {
     return res.status(201).json(success('No hay reservas', {}, res.statusCode))
