@@ -180,8 +180,6 @@ const getNextAppointment = async (req = request, res = response) => {
 
   const isoDate = moment()
 
-  console.log(user)
-
   const isBusiness = user.role === 'BUSINESS_ROLE'
 
   if (!isBusiness) {
@@ -190,7 +188,6 @@ const getNextAppointment = async (req = request, res = response) => {
     const business = await Business.findOne({ user: user._id })
     payload = { business: business._id }
   }
-  console.log(payload)
 
   const appointment = await Appointment.findOne({
     ...payload,
