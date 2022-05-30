@@ -65,6 +65,7 @@ AppointmentSchema.methods.toJSON = function () {
 
   type.uid = _id
   type.business.uid = type.business._id
+  type.business.user.uid = type.business.user._id
   type.user.uid = type.user._id
   type.service_type.uid = type.service_type._id
 
@@ -81,6 +82,10 @@ AppointmentSchema.methods.toJSON = function () {
   delete type.__v
   
   delete type.business._id
+  delete type.business.__v
+  
+  delete type.business.user._id
+  delete type.business.user.__v
 
   delete type.service_type._id
   delete type.service_type.__v

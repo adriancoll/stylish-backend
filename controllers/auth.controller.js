@@ -8,6 +8,7 @@ const User = require('../models/user.model')
 const Business = require('../models/business.model')
 const Appointment = require('../models/appointment.model')
 const { error, success } = require('../helpers')
+const { parseMyAppointments } = require('../helpers/appontment-helper')
 
 const login = async (req = request, res = response) => {
   try {
@@ -65,7 +66,11 @@ const login = async (req = request, res = response) => {
     ])
 
     if (business) {
-      const appointments = await Appointment.find({ business: business._id })
+      let appointments = await Appointment.find({ business: business._id })
+        .deepPopulate('business.service_types, business.user')
+        .sort({ date: 'desc' })
+
+      appointments = parseMyAppointments(appointments)
 
       return res.json(
         success(
@@ -81,12 +86,19 @@ const login = async (req = request, res = response) => {
       )
     }
 
+    let appointments = await Appointment.find({ user: user.id })
+      .deepPopulate('business.service_types, business.user')
+      .sort({ date: 'desc' })
+
+    appointments = parseMyAppointments(appointments)
+
     return res.json(
       success(
         'ok',
         {
           user,
           token,
+          appointments,
         },
         res.statusCode
       )
@@ -167,10 +179,16 @@ const refreshToken = async (req = request, res = response) => {
 
   if (business) {
     payload.appointments = await Appointment.find({ business: business._id })
+      .deepPopulate('business.service_types, business.user')
+      .sort({ date: 'desc' })
     payload.business = business
   } else {
     payload.appointments = await Appointment.find({ user: user.id })
+      .deepPopulate('business.service_types, business.user')
+      .sort({ date: 'desc' })
   }
+
+  payload.appointments = parseMyAppointments(payload.appointments)
 
   return res.json(
     success('Usuario, Token renovado 😎', payload, res.statusCode)

@@ -4,11 +4,12 @@ const schedule = require('node-schedule')
 const debug = require('../utils/debug')
 
 // Models
-const { Appointment, Service_type } = require('../models')
+const { Appointment, Service_type, Business } = require('../models')
 const { success, error } = require('../helpers')
 const { isEmpty } = require('lodash')
 const moment = require('moment')
 const { check } = require('prettier')
+const { parseMyAppointments } = require('../helpers/appontment-helper')
 
 const storeAppointment = async (req = request, res = response) => {
   const { body, user } = req
@@ -90,50 +91,38 @@ const deleteAppointment = async (req = request, res = response) => {
 }
 
 const getAllAppointments = async (req = request, res = response) => {
-  const appointments = await Appointment.find()
+  let appointments = await Appointment.find()
+
+  appointments = parseMyAppointments(appointments)
 
   res.json(success('ok', { appointments }, res.statusCode))
 }
 
 const getMyAppointments = async (req = request, res = response) => {
   let appointments, payload
+  const { user } = req
+  const { id } = user
 
-  const { business_id } = req.body
+  const isBusiness = user.role === 'BUSINESS_ROLE'
 
-  if (!business_id) {
-    const { id } = req.user
+  if (!isBusiness) {
     payload = { user: id }
   } else {
-    payload = { business: business_id }
+    const business = await Business.findOne({ user: id })
+    payload = { business: business._id }
   }
-  
+
   appointments = await Appointment.find(payload)
-    .deepPopulate('business.service_types')
+    .deepPopulate('business.service_types, business.user')
     .sort({ date: 'desc' })
 
-  const filteredAppointments = {
-    PENDING_CONFIRM: appointments.filter(
-      (appointment) => appointment.status === 'PENDING_CONFIRM'
-    ),
-    CONFIRMED: appointments.filter(
-      (appointment) => appointment.status === 'CONFIRMED'
-    ),
-    COMPLETED: appointments.filter(
-      (appointment) => appointment.status === 'COMPLETED'
-    ),
-    CANCELED: appointments.filter(
-      (appointment) => appointment.status === 'CANCELED'
-    ),
-    TIMEOUT: appointments.filter(
-      (appointment) => appointment.status === 'TIMEOUT'
-    ),
-  }
+  appointments = parseMyAppointments(appointments)
 
   res.json(
     success(
       'ok',
       {
-        appointments: filteredAppointments,
+        appointments,
       },
       res.statusCode
     )
@@ -191,6 +180,17 @@ const getNextAppointment = async (req = request, res = response) => {
 
   const isoDate = moment()
 
+  const { id } = user
+
+  const isBusiness = user.role === 'BUSINESS_ROLE'
+
+  if (!isBusiness) {
+    payload = { user: id }
+  } else {
+    const business = await Business.findOne({ user: id })
+    payload = { business: business._id }
+  }
+
   const appointment = await Appointment.findOne({
     user: user._id,
     date: { $gte: isoDate },
@@ -199,7 +199,7 @@ const getNextAppointment = async (req = request, res = response) => {
     },
   })
     .sort({ date: 1 })
-    .deepPopulate('business.service_types')
+    .deepPopulate('business.service_types, business.user')
 
   if (isEmpty(appointment)) {
     return res.status(201).json(success('No hay reservas', {}, res.statusCode))

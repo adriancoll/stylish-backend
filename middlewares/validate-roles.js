@@ -33,9 +33,10 @@ const hasRole = (...roles) => {
     }
 
     if (!roles.includes(req.user.role)) {
+      debug(`¡No tienes el rol: ${roles.join(", ")}!`, 'error')
       return res
         .status(401)
-        .json(error(`¡No tienes el rol: ${roles.join(", ")}!`, res.statusCode));
+        .json(error(`¡No tienes el los permisos necesarios para realizar esta acción!`, res.statusCode));
     }
 
     next();

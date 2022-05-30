@@ -33,7 +33,7 @@ router.post(
   [
     isBodyEmpty,
     validateJWT,
-    // hasRole("USER_ROLE", "ADMIN_ROLE"),
+    hasRole("USER_ROLE", "ADMIN_ROLE"),
     check('business').isMongoId(),
     check('service_type').isMongoId(),
     check(
