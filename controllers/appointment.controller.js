@@ -180,19 +180,20 @@ const getNextAppointment = async (req = request, res = response) => {
 
   const isoDate = moment()
 
-  const { id } = user
+  console.log(user)
 
   const isBusiness = user.role === 'BUSINESS_ROLE'
 
   if (!isBusiness) {
-    payload = { user: id }
+    payload = { user: user._id }
   } else {
-    const business = await Business.findOne({ user: id })
+    const business = await Business.findOne({ user: user._id })
     payload = { business: business._id }
   }
+  console.log(payload)
 
   const appointment = await Appointment.findOne({
-    user: user._id,
+    ...payload,
     date: { $gte: isoDate },
     status: {
       $in: ['PENDING_CONFIRM', 'CONFIRMED', 'CANCELED'],

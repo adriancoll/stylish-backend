@@ -106,7 +106,7 @@ const userUpdate = async (req = request, res = response) => {
   }
 
   // If wants to change it's password
-  if (password) {
+  if (!isEmpty(password)) {
     other.password = hashPassword(password)
   }
 

@@ -1,5 +1,6 @@
 const { request, response } = require("express");
 const { error } = require("../helpers");
+const debug = require("../utils/debug");
 
 const isAdminRole = (req = request, res = response, next) => {
   if (!req.user) {
@@ -33,7 +34,7 @@ const hasRole = (...roles) => {
     }
 
     if (!roles.includes(req.user.role)) {
-      debug(`¡No tienes el rol: ${roles.join(", ")}!`, 'error')
+      debug(`¡El usuario (${req.user._id}) no tiene el rol: ${roles.join(", ")}!`, 'error')
       return res
         .status(401)
         .json(error(`¡No tienes el los permisos necesarios para realizar esta acción!`, res.statusCode));
