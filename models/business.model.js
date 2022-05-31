@@ -31,7 +31,7 @@ const BusinessSchema = new Schema({
   },
   image: {
     type: String,
-    default: true,
+    default: 'https://uning.es/wp-content/uploads/2016/08/ef3-placeholder-image.jpg',
   },
   service_types: [
     {
