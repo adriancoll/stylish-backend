@@ -40,6 +40,7 @@ const getUserBusiness = async (req = request, res = response) => {
 
 const storeBusiness = async (req = request, res = response) => {
   const { name, image, user_id, service_types, rating, ...other } = req.body
+  const { files } = req
 
   const userQuery = { status: true, role: 'BUSINESS_ROLE', _id: user_id }
 
@@ -64,6 +65,27 @@ const storeBusiness = async (req = request, res = response) => {
     return res
       .status(401)
       .json(error('El usuario ya tiene un negocio', null, res.statusCode))
+  }
+
+  if (files && Object.keys(files).length > 0) {
+    try {
+      const { tempFilePath } = files.file
+      const { secure_url } = await cloudinary.v2.uploader.upload(tempFilePath)
+
+      business = await Business.findByIdAndUpdate(
+        id,
+        { image: secure_url },
+        { new: true }
+      )
+    } catch (ex) {
+      return res.json(
+        error(
+          'No se ha podido actualizar tu imágen, contacta a un administrador',
+          500,
+          ex
+        )
+      )
+    }
   }
 
   const $service_types = clearDuplicates(service_types)
@@ -97,8 +119,11 @@ const updateBusiness = async (req = request, res = response) => {
 
     const { files } = req
 
+    console.log(req.body)
+
     if (files && Object.keys(files).length > 0) {
       try {
+        console.log(files)
         const { tempFilePath } = files.file
         const { secure_url } = await cloudinary.v2.uploader.upload(tempFilePath)
 
@@ -108,6 +133,7 @@ const updateBusiness = async (req = request, res = response) => {
           { new: true }
         )
       } catch (ex) {
+        console.log(ex)
         return res.json(
           error(
             'No se ha podido actualizar tu imágen, contacta a un administrador',
@@ -127,10 +153,14 @@ const updateBusiness = async (req = request, res = response) => {
      */
     const $service_types = clearDuplicates(service_types)
 
-    business = await Business.findByIdAndUpdate(id, {
-      ...data,
-      service_types: $service_types,
-    })
+    business = await Business.findByIdAndUpdate(
+      id,
+      {
+        ...data,
+        service_types: $service_types,
+      },
+      { new: true }
+    )
       .populate('user', '-password -__v')
       .populate('service_types', '-user -__v')
 
@@ -150,8 +180,10 @@ const updateBusiness = async (req = request, res = response) => {
       .status(500)
       .json(error('Error al actualizar el negocio', {}, res.statusCode))
   } catch (e) {
-    res.json(error(e ?? 'Error al actualizar el negocio', res.statusCode))
     debug(e, 'error')
+    return res.json(
+      error(e ?? 'Error al actualizar el negocio', res.statusCode)
+    )
   }
 }
 
