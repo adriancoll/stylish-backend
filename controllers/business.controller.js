@@ -39,8 +39,7 @@ const getUserBusiness = async (req = request, res = response) => {
 }
 
 const storeBusiness = async (req = request, res = response) => {
-  const { name, image, user_id, service_types, rating, ...other } = req.body
-  const { files } = req
+  const { name, address, image, user_id, service_types, rating, ...other } = req.body
 
   const userQuery = { status: true, role: 'BUSINESS_ROLE', _id: user_id }
 
@@ -49,46 +48,23 @@ const storeBusiness = async (req = request, res = response) => {
     Business.findOne({ user: user_id }),
   ])
 
-  if (!userHasRoleAndExists) {
-    return res
-      .status(401)
-      .json(
-        error(
-          'El usuario no tiene un rol de empresa o no existe',
-          {},
-          res.statusCode
-        )
-      )
-  }
-
   if (exists) {
     return res
       .status(401)
       .json(error('El usuario ya tiene un negocio', null, res.statusCode))
   }
 
-  if (files && Object.keys(files).length > 0) {
-    try {
-      const { tempFilePath } = files.file
-      const { secure_url } = await cloudinary.v2.uploader.upload(tempFilePath)
-
-      business = await Business.findByIdAndUpdate(
-        id,
-        { image: secure_url },
-        { new: true }
-      )
-    } catch (ex) {
-      return res.json(
-        error(
-          'No se ha podido actualizar tu imágen, contacta a un administrador',
-          500,
-          ex
-        )
-      )
-    }
+  if (!userHasRoleAndExists) {
+    await User.findOneAndUpdate(
+      { status: true, _id: user_id },
+      {
+        role: 'BUSINESS_ROLE',
+      }
+    )
   }
 
   const $service_types = clearDuplicates(service_types)
+
   let business = await Business.create({
     name,
     image,
@@ -112,16 +88,15 @@ const storeBusiness = async (req = request, res = response) => {
   )
 }
 
-const updateBusiness = async (req = request, res = response) => {
+const updateBusinessImage = async (req = request, res = response) => {
   try {
     let business
     const { id } = req.params
 
     const { files } = req
 
-    console.log(req.body)
-
     if (files && Object.keys(files).length > 0) {
+      console.log(files)
       try {
         console.log(files)
         const { tempFilePath } = files.file
@@ -132,6 +107,18 @@ const updateBusiness = async (req = request, res = response) => {
           { image: secure_url },
           { new: true }
         )
+          .populate('user', '-password')
+          .populate('service_types', '-user -status -__v')
+
+        return res
+          .status(200)
+          .json(
+            success(
+              'Imágen actualizada correctamente.',
+              { business },
+              res.statusCode
+            )
+          )
       } catch (ex) {
         console.log(ex)
         return res.json(
@@ -144,7 +131,59 @@ const updateBusiness = async (req = request, res = response) => {
       }
     }
 
-    const { service_types, rating: _rating, ...data } = req.body
+    return res
+      .status(500)
+      .json(error('Error al actualizar el negocio', {}, res.statusCode))
+  } catch (e) {
+    debug(e, 'error')
+    return res.json(
+      error(e ?? 'Error al actualizar el negocio', res.statusCode)
+    )
+  }
+}
+
+const updateBusiness = async (req = request, res = response) => {
+  try {
+    let business
+    const { id } = req.params
+
+    const { files, body } = req
+    const { service_types, rating: _rating, ...data } = body
+
+    if (files && Object.keys(files).length > 0) {
+      console.log(files)
+      try {
+        console.log(files)
+        const { tempFilePath } = files.file
+        const { secure_url } = await cloudinary.v2.uploader.upload(tempFilePath)
+
+        business = await Business.findByIdAndUpdate(
+          id,
+          { image: secure_url },
+          { new: true }
+        )
+
+        if (!data)
+          return res
+            .status(200)
+            .json(
+              success(
+                'Imágen actualizada correctamente',
+                { business },
+                res.statusCode
+              )
+            )
+      } catch (ex) {
+        console.log(ex)
+        return res.json(
+          error(
+            'No se ha podido actualizar tu imágen, contacta a un administrador',
+            500,
+            ex
+          )
+        )
+      }
+    }
 
     /**
      * Clear duplicated values in case of API
@@ -237,4 +276,5 @@ module.exports = {
   getAllBusiness,
   addFeedback,
   getPopularBusiness,
+  updateBusinessImage,
 }
