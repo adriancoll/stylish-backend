@@ -8,7 +8,6 @@ const { Appointment, Service_type, Business } = require('../models')
 const { success, error } = require('../helpers')
 const { isEmpty } = require('lodash')
 const moment = require('moment')
-const { check } = require('prettier')
 const { parseMyAppointments } = require('../helpers/appontment-helper')
 
 const storeAppointment = async (req = request, res = response) => {
@@ -40,14 +39,16 @@ const storeAppointment = async (req = request, res = response) => {
     ...other,
   })
 
+
+  // Schedule job to confirm appointment on time
   const rule = new schedule.RecurrenceRule()
 
-  rule.year = moment(date).year()
-  rule.month = moment(date).month()
-  rule.date = moment(date).date()
-  rule.hour = moment(date).hours()
-  rule.minute = moment(date).minutes()
-  rule.second = moment(date).seconds()
+  rule.year = moment(appointment.end_date).year()
+  rule.month = moment(appointment.end_date).month()
+  rule.date = moment(appointment.end_date).date()
+  rule.hour = moment(appointment.end_date).hours()
+  rule.minute = moment(appointment.end_date).minutes()
+  rule.second = moment(appointment.end_date).seconds()
   rule.tz = 'Europe/Madrid'
 
   schedule.scheduleJob(rule, async () => {
@@ -156,6 +157,34 @@ const confirmAppointment = async (req = request, res = response) => {
   res.json(success('ok', { appointment }, res.statusCode))
 }
 
+
+const completeAppointment = async (req = request, res = response) => {
+  const { id } = req.params
+
+  const appointment = await Appointment.findOneAndUpdate(
+    {
+      _id: id,
+      status: 'CONFIRMED',
+    },
+    {
+      status: 'COMPLETED',
+    },
+    {
+      new: true,
+    }
+  )
+
+  if (!appointment) {
+    return res
+      .status(400)
+      .json(
+        error('La reseva no existe, o ya ha sido completada', res.statusCode)
+      )
+  }
+
+  res.json(success('ok', { appointment }, res.statusCode))
+}
+
 const updateAppointment = async (req = request, res = response) => {
   const { id } = req.params
   const { status, ...data } = req.body
@@ -214,4 +243,5 @@ module.exports = {
   updateAppointment,
   getMyAppointments,
   getNextAppointment,
+  completeAppointment,
 }

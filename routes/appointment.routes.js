@@ -5,6 +5,7 @@ const { crudValidator } = require('../middlewares/crud-validators')
 const {
   storeAppointment,
   confirmAppointment,
+  completeAppointment,
   getAllAppointments,
   updateAppointment,
   deleteAppointment,
@@ -70,6 +71,12 @@ router.post(
   '/confirm/:id',
   [validateJWT, hasRole('BUSINESS_ROLE', 'ADMIN_ROLE'), crudValidator],
   confirmAppointment
+)
+
+router.post(
+  '/complete/:id',
+  [validateJWT, hasRole('USER_ROLE', 'ADMIN_ROLE'), crudValidator],
+  completeAppointment
 )
 
 router.post('/all', [crudValidator], getAllAppointments)
