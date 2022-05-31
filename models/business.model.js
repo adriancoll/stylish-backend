@@ -38,7 +38,6 @@ const BusinessSchema = new Schema({
       type: Schema.Types.ObjectId,
       ref: 'Service-Type',
       default: [],
-      unique: true,
       autopopulate: true,
     },
   ],
@@ -60,6 +59,7 @@ const BusinessSchema = new Schema({
 BusinessSchema.methods.toJSON = function () {
   const { __v, _id, service_types, ...type } = this.toObject()
   
+  type.user.uid = type.user._id
   type.service_types = service_types.map((service_type) => {
     service_type.uid = service_type._id.toString()
     delete service_type._id
