@@ -96,9 +96,7 @@ const updateBusinessImage = async (req = request, res = response) => {
     const { files } = req
 
     if (files && Object.keys(files).length > 0) {
-      console.log(files)
       try {
-        console.log(files)
         const { tempFilePath } = files.file
         const { secure_url } = await cloudinary.v2.uploader.upload(tempFilePath)
 
@@ -120,7 +118,6 @@ const updateBusinessImage = async (req = request, res = response) => {
             )
           )
       } catch (ex) {
-        console.log(ex)
         return res.json(
           error(
             'No se ha podido actualizar tu imágen, contacta a un administrador',
@@ -151,9 +148,7 @@ const updateBusiness = async (req = request, res = response) => {
     const { service_types, rating: _rating, ...data } = body
 
     if (files && Object.keys(files).length > 0) {
-      console.log(files)
       try {
-        console.log(files)
         const { tempFilePath } = files.file
         const { secure_url } = await cloudinary.v2.uploader.upload(tempFilePath)
 
@@ -174,7 +169,6 @@ const updateBusiness = async (req = request, res = response) => {
               )
             )
       } catch (ex) {
-        console.log(ex)
         return res.json(
           error(
             'No se ha podido actualizar tu imágen, contacta a un administrador',
