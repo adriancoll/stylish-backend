@@ -12,7 +12,7 @@ const { parseMyAppointments } = require('../helpers/appontment-helper')
 
 const storeAppointment = async (req = request, res = response) => {
   const { body, user } = req
-  const { business, service_type, date, ...other } = body
+  const { business, service_type, observations, date, ...other } = body
 
   const appointmentExist = await Appointment.findOne({
     user: user._id,
@@ -34,6 +34,7 @@ const storeAppointment = async (req = request, res = response) => {
     business,
     date,
     service_type,
+    observations: isEmpty(observations) ? '' : observations.trim(),
     user,
     end_date: moment(date).add(duration, 'm'),
     ...other,
