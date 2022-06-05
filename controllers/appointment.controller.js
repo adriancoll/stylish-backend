@@ -166,6 +166,7 @@ const completeAppointment = async (req = request, res = response) => {
     {
       _id: id,
       status: 'CONFIRMED',
+      end_date: moment()
     },
     {
       status: 'COMPLETED',
