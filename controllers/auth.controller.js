@@ -191,7 +191,7 @@ const refreshToken = async (req = request, res = response) => {
   payload.appointments = parseMyAppointments(payload.appointments)
 
   return res.json(
-    success('Usuario, Token renovado 😎', payload, res.statusCode)
+    success('Token renovado 😎', payload, res.statusCode)
   )
 }
 

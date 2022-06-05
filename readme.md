@@ -1,14 +1,4 @@
-<div style="
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    aspect-ratio: 1;
-    width: 100px; 
-">
-    
 ![logo](https://res.cloudinary.com/dio0rdpui/image/upload/v1654209954/readme-image_wuwnmx.png)
-
-</div>
 
 # Backend for stylish mobile app
 

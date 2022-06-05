@@ -5,6 +5,7 @@ const cloudinary = require('cloudinary')
 
 const User = require('../models/user.model')
 const { success, error } = require('../helpers')
+const debug = require('../utils/debug')
 const { isEmpty } = require('lodash')
 
 const userGet = async (req = request, res = response) => {
@@ -20,7 +21,7 @@ const userGet = async (req = request, res = response) => {
     User.countDocuments(query),
   ])
 
-  res.json(
+  return res.json(
     success(
       'OK',
       {
@@ -51,7 +52,7 @@ const userPost = async (req = request, res = response) => {
 
     // Guardar en BD
     const savedUser = await user.save()
-    res.status(201).json(
+    return res.status(201).json(
       success(
         'Usuario creado correctamente',
         {
@@ -60,13 +61,13 @@ const userPost = async (req = request, res = response) => {
         res.statusCode
       )
     )
-  } catch (error) {
-    res.json(
+  } catch (err) {
+    return res.json(
       error(
         'Error al crear usuario',
         {
           ok: false,
-          error,
+          err,
         },
         res.statusCode
       )
