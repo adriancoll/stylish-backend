@@ -5,7 +5,7 @@
     aspect-ratio: 1;
     width: 100px; 
 ">
-![Stylish app logo](https://res.cloudinary.com/dio0rdpui/image/upload/v1654209954/readme-image_wuwnmx.png)
+![logo](https://res.cloudinary.com/dio0rdpui/image/upload/v1654209954/readme-image_wuwnmx.png)
 </div>
 
 # Backend for stylish mobile app
