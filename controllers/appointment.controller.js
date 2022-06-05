@@ -63,7 +63,7 @@ const storeAppointment = async (req = request, res = response) => {
     }
 
     debug(
-      `The appointment was ${appointment._id} completed successfully.`,
+      `The ${appointment._id} appointment was  completed successfully.`,
       'info'
     )
   })

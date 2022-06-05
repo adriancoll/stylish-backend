@@ -16,7 +16,6 @@ const {
 const {
   hasRole,
   validateJWT,
-  isAdminRole,
   checkAppointmentConflicts,
   isBodyEmpty,
 } = require('../middlewares')
