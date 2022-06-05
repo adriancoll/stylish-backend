@@ -74,14 +74,3 @@ git push heroku master
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy) 
 
-
-<div style="
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-">
-<img src="./public/assets/img/stylish-sin-fondo.png"></img>
-<img src="https://brand.heroku.com/static/media/built-on-heroku-light.21a0c1f7.svg"></img>
-</div>
-
