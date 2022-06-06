@@ -165,8 +165,7 @@ const completeAppointment = async (req = request, res = response) => {
   const appointment = await Appointment.findOneAndUpdate(
     {
       _id: id,
-      status: 'CONFIRMED',
-      end_date: moment()
+      status: 'CONFIRMED'
     },
     {
       status: 'COMPLETED',
