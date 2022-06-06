@@ -34,7 +34,7 @@ const storeServiceType = async (req = request, res = response) => {
 
   const service_type = await ServiceType.create(payload);
 
-  res.json(success("ok", { ...service_type }, res.statusCode));
+  res.json(success("ok", { service_type }, res.statusCode));
 };
 
 const updateServiceType = (req = request, res = response) => {
