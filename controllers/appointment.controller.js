@@ -30,7 +30,7 @@ const storeAppointment = async (req = request, res = response) => {
 
   const { duration } = await Service_type.findById(service_type);
 
-  const appointment = await Appointment.create({
+  const savedAppointment = await Appointment.create({
     business,
     date,
     service_type,
@@ -38,7 +38,11 @@ const storeAppointment = async (req = request, res = response) => {
     user,
     end_date: moment(date).add(duration, "m"),
     ...other,
-  }).deepPopulate("business.service_types, business.user");
+  });
+
+  const appointment = await Appointment
+    .findById(savedAppointment._id)
+    .deepPopulate("business.service_types, business.user");
 
   // Schedule job to confirm appointment on time
   const rule = new schedule.RecurrenceRule();
