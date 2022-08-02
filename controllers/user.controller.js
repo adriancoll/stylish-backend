@@ -5,7 +5,6 @@ const cloudinary = require('cloudinary')
 
 const User = require('../models/user.model')
 const { success, error } = require('../helpers')
-const debug = require('../utils/debug')
 const { isEmpty } = require('lodash')
 
 const userGet = async (req = request, res = response) => {
@@ -81,8 +80,15 @@ const userUpdate = async (req = request, res = response) => {
     const { id } = req.params
 
     // Defragment for excluding form normal validation
-    const { _id, password, google, email, phone_number, image, ...other } =
-        req.body
+    const {
+        _id,
+        password,
+        google: _google,
+        email: _email,
+        phone_number,
+        image: _image,
+        ...other
+    } = req.body
 
     /**
      * Documentacion de cloudinary

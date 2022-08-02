@@ -38,8 +38,15 @@ const getUserBusiness = async (req = request, res = response) => {
 }
 
 const storeBusiness = async (req = request, res = response) => {
-    const { name, address, image, user_id, service_types, rating, ...other } =
-        req.body
+    const {
+        name,
+        address: _address,
+        image,
+        user_id,
+        service_types,
+        rating: _rating,
+        ...other
+    } = req.body
 
     const userQuery = { status: true, role: 'BUSINESS_ROLE', _id: user_id }
 

@@ -1,10 +1,9 @@
 const { request, response } = require('express')
-const debug = require('../../utils/debug')
 
 const ServiceType = require('../../models/services/service-type.model')
 const { success, error } = require('../../helpers')
 
-const getAllServiceType = async (req = request, res = response) => {
+const getAllServiceType = async (_req = request, res = response) => {
     const service_types = await ServiceType.find({ status: true })
     res.json(success('ok', service_types, res.statusCode))
 }

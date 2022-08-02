@@ -3,7 +3,6 @@ const fileUpload = require('express-fileupload')
 const cors = require('cors')
 
 const { dbConnection } = require('../database/config')
-const { validateJWT } = require('../middlewares')
 const debug = require('../utils/debug')
 
 class Server {

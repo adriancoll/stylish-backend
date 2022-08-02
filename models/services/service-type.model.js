@@ -24,7 +24,7 @@ ServiceTypeSchema.methods.toJSON = function () {
 }
 
 ServiceTypeSchema.set('toJSON', {
-    transform: (document, returnedObject) => {
+    transform: (_document, returnedObject) => {
         returnedObject.uid = returnedObject._id.toString()
         delete returnedObject._id
         delete returnedObject.__v

@@ -19,7 +19,6 @@ const {
     crudValidator,
     isAdminRole,
     validateJWT,
-    hasRole,
 } = require('../middlewares')
 
 const router = Router()

@@ -13,9 +13,6 @@ const {
 
 const { serviceTypeExists } = require('../helpers/db-validators')
 
-const ServiceType = require('../models/services/service-type.model')
-const { paginatedResults } = require('../helpers/paginator')
-
 const router = Router()
 
 router.post('/all', [], getAllServiceType)
