@@ -1,15 +1,15 @@
-const Service_type = require("./services/service-type.model");
-const Server       = require("./server");
-const User         = require("./user.model");
-const Role         = require("./role.model");
-const Business     = require("./business.model");
-const Appointment  = require("./appointment.model");
+const Service_type = require('./services/service-type.model')
+const Server = require('./server')
+const User = require('./user.model')
+const Role = require('./role.model')
+const Business = require('./business.model')
+const Appointment = require('./appointment.model')
 
 module.exports = {
-  Service_type,
-  Server,
-  User,
-  Role,
-  Business,
-  Appointment
-};
+    Service_type,
+    Server,
+    User,
+    Role,
+    Business,
+    Appointment,
+}

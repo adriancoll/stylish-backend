@@ -1,6 +1,6 @@
 {
-  "verbose": false,
-  "events": {
-    "start": "cls"
-  }
+    "verbose": false,
+    "events": {
+        "start": "cls"
+    }
 }

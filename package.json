@@ -1,39 +1,47 @@
 {
-  "name": "stylis-backend",
-  "version": "0.0.1",
-  "description": "Node + Express backend",
-  "main": "index.js",
-  "scripts": {
-    "start": "node app",
-    "dev": "nodemon app",
-    "secret:generate": "node -e \"console.log('¡Copia el siguiente token y pegalo en el .env =>', require('crypto').randomBytes(256).toString('base64'));\""
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "cloudinary": "^1.30.0",
-    "colors": "^1.4.0",
-    "cors": "2.8.5",
-    "dotenv": "10.0.0",
-    "expo-server-sdk": "^3.6.0",
-    "express": "4.17.1",
-    "express-fileupload": "^1.3.1",
-    "express-validator": "^6.14.0",
-    "google-auth-library": "^7.14.1",
-    "jsonwebtoken": "^8.5.1",
-    "lodash": "^4.17.21",
-    "moment": "^2.29.2",
-    "mongoose": "^6.2.10",
-    "mongoose-autopopulate": "^0.16.1",
-    "mongoose-deep-populate": "^3.2.0",
-    "node-schedule": "^2.1.0",
-    "uuid": "^8.3.2"
-  },
-  "devDependencies": {
-    "node-cron": "^3.0.0",
-    "nodemon": "^2.0.15",
-    "prettier": "^2.6.2"
-  }
+    "name": "stylis-backend",
+    "version": "0.0.1",
+    "description": "Node + Express backend",
+    "main": "index.js",
+    "scripts": {
+        "start": "node app",
+        "dev": "nodemon app",
+        "secret:generate": "node -e \"console.log('¡Copia el siguiente token y pegalo en el .env =>', require('crypto').randomBytes(256).toString('base64'));\"",
+        "format:check": "prettier --check .",
+        "format:write": "prettier --write .",
+        "lint:check": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "lint:full": "npm run format:write && npm run format:check && npm run lint:fix && npm run lint:check"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "bcryptjs": "^2.4.3",
+        "cloudinary": "^1.30.0",
+        "colors": "^1.4.0",
+        "cors": "2.8.5",
+        "dotenv": "10.0.0",
+        "expo-server-sdk": "^3.6.0",
+        "express": "4.17.1",
+        "express-fileupload": "^1.3.1",
+        "express-validator": "^6.14.0",
+        "google-auth-library": "^7.14.1",
+        "jsonwebtoken": "^8.5.1",
+        "lodash": "^4.17.21",
+        "moment": "^2.29.2",
+        "mongoose": "^6.2.10",
+        "mongoose-autopopulate": "^0.16.1",
+        "mongoose-deep-populate": "^3.2.0",
+        "node-schedule": "^2.1.0",
+        "uuid": "^8.3.2"
+    },
+    "devDependencies": {
+        "eslint": "^8.21.0",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-prettier": "^4.2.1",
+        "node-cron": "^3.0.0",
+        "nodemon": "^2.0.15",
+        "prettier": "^2.7.1"
+    }
 }

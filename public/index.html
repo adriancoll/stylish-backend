@@ -1,64 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Google SignIn</title>
-  </head>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Google SignIn</title>
+    </head>
 
-  <body>
-    <h1>Google SignIn</h1>
-    <div
-      id="g_id_onload"
-      data-client_id="577661903302-l069dsm6392c44n67tho34t0gnrv8nhp.apps.googleusercontent.com"
-      data-auto_prompt="true"
-      data-callback="handleCredentialResponse"
-    ></div>
-    <div
-      class="g_id_signin"
-      data-type="standard"
-      data-size="large"
-      data-theme="outline"
-      data-text="sign_in_with"
-      data-shape="rectangular"
-      data-logo_alignment="left"
-    ></div>
+    <body>
+        <h1>Google SignIn</h1>
+        <div
+            id="g_id_onload"
+            data-client_id="577661903302-l069dsm6392c44n67tho34t0gnrv8nhp.apps.googleusercontent.com"
+            data-auto_prompt="true"
+            data-callback="handleCredentialResponse"
+        ></div>
+        <div
+            class="g_id_signin"
+            data-type="standard"
+            data-size="large"
+            data-theme="outline"
+            data-text="sign_in_with"
+            data-shape="rectangular"
+            data-logo_alignment="left"
+        ></div>
 
-    <button id="google-signout">SignOut</button>
+        <button id="google-signout">SignOut</button>
 
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <script>
-      const BASE_URL = window.location.hostname.includes('localhost') ? 'http://localhost:8080' : 'https://stylish-backend.herokuapp.com'
-      // @TODO: NATIVE
-        function handleCredentialResponse(response) {
+        <script
+            src="https://accounts.google.com/gsi/client"
+            async
+            defer
+        ></script>
+        <script>
+            const BASE_URL = window.location.hostname.includes('localhost')
+                ? 'http://localhost:8080'
+                : 'https://stylish-backend.herokuapp.com'
+            // @TODO: NATIVE
+            function handleCredentialResponse(response) {
+                const payload = {
+                    id_token: response.credential,
+                }
 
-          const payload = {
-            id_token: response.credential
-          }
+                fetch(`${BASE_URL}/api/auth/google`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                })
+                    .then((response) => response.json())
+                    .then((response) => {
+                        localStorage.setItem('email', response.user.email)
+                    })
+            }
 
-          
-          fetch(`${BASE_URL}/api/auth/google`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload)
-          })
-            .then((response) => response.json())
-            .then((response) => {
-              localStorage.setItem('email', response.user.email )
-            });
-        }
-    
-        const button = document.getElementById('google-signout')
+            const button = document.getElementById('google-signout')
 
-        button.onclick = (event) => {
-          google.accounts.id.revoke( localStorage.getItem('email'), success => {
-            localStorage.clear()
-            location.reload()
-          })
-        }
-    </script>
-  </body>
+            button.onclick = (event) => {
+                google.accounts.id.revoke(
+                    localStorage.getItem('email'),
+                    (success) => {
+                        localStorage.clear()
+                        location.reload()
+                    }
+                )
+            }
+        </script>
+    </body>
 </html>

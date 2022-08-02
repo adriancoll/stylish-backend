@@ -15,17 +15,19 @@ const { isEmpty } = require('lodash')
  * @param {String} name name of the role to validate
  */
 const isValidRole = async (name = '') => {
-  if (name === 'ADMIN_ROLE') {
-    throw new Error(
-      `No se puede crear y/o actualizar un usuario con el rol ${name}.`
-    )
-  }
+    if (name === 'ADMIN_ROLE') {
+        throw new Error(
+            `No se puede crear y/o actualizar un usuario con el rol ${name}.`
+        )
+    }
 
-  const existeRol = await Role.findOne({ name })
+    const existeRol = await Role.findOne({ name })
 
-  if (!existeRol) {
-    throw new Error(`El rol '${name}' no está registrado en la base de datos.`)
-  }
+    if (!existeRol) {
+        throw new Error(
+            `El rol '${name}' no está registrado en la base de datos.`
+        )
+    }
 }
 
 /**
@@ -33,11 +35,11 @@ const isValidRole = async (name = '') => {
  * @param {String} email to validate
  */
 const emailExists = async (email = '') => {
-  const existeEmail = await User.findOne({ email })
+    const existeEmail = await User.findOne({ email })
 
-  if (existeEmail) {
-    throw new Error(`El email '${email}', ya está registrado.`)
-  }
+    if (existeEmail) {
+        throw new Error(`El email '${email}', ya está registrado.`)
+    }
 }
 
 /**
@@ -45,13 +47,13 @@ const emailExists = async (email = '') => {
  * @param {String} email to validate
  */
 const userWithPhoneExists = async (phone_number = '') => {
-  const existePhoneNumber = await User.findOne({ phone_number })
+    const existePhoneNumber = await User.findOne({ phone_number })
 
-  if (existePhoneNumber) {
-    throw new Error(
-      `El número de teléfono '${phone_number}', ya está registrado.`
-    )
-  }
+    if (existePhoneNumber) {
+        throw new Error(
+            `El número de teléfono '${phone_number}', ya está registrado.`
+        )
+    }
 }
 
 /**
@@ -59,20 +61,20 @@ const userWithPhoneExists = async (phone_number = '') => {
  * @param {Number} id id of the user to validate
  */
 const userExists = async (id) => {
-  if (id.match(/^[0-9a-fA-F]{24}$/)) {
-    // Yes, it's a valid ObjectId, proceed with `findById` call.
-    const exists = await User.findById(id)
+    if (id.match(/^[0-9a-fA-F]{24}$/)) {
+        // Yes, it's a valid ObjectId, proceed with `findById` call.
+        const exists = await User.findById(id)
 
-    if (!exists || !exists.status) {
-      debug(
-        `El usuario con id: '${id}', no existe ó está deshabilitado.`,
-        'error'
-      )
-      throw new Error(
-        `El usuario con id: '${id}', no existe ó está deshabilitado.`
-      )
+        if (!exists || !exists.status) {
+            debug(
+                `El usuario con id: '${id}', no existe ó está deshabilitado.`,
+                'error'
+            )
+            throw new Error(
+                `El usuario con id: '${id}', no existe ó está deshabilitado.`
+            )
+        }
     }
-  }
 }
 
 /**
@@ -80,30 +82,30 @@ const userExists = async (id) => {
  * @param {Number} id id of the business to validate
  */
 const businessExists = async (id) => {
-  if (id.match(/^[0-9a-fA-F]{24}$/)) {
-    // Yes, it's a valid ObjectId, proceed with `findById` call.
-    const exists = await Business.findById(id).populate('user')
+    if (id.match(/^[0-9a-fA-F]{24}$/)) {
+        // Yes, it's a valid ObjectId, proceed with `findById` call.
+        const exists = await Business.findById(id).populate('user')
 
-    if (!exists) {
-      debug(
-        `La empresa con id: '${id}', no existe ó está deshabilitado.`,
-        'error'
-      )
-      throw new Error(
-        `La empresa con id: '${id}', no existe ó está deshabilitado.`
-      )
-    }
+        if (!exists) {
+            debug(
+                `La empresa con id: '${id}', no existe ó está deshabilitado.`,
+                'error'
+            )
+            throw new Error(
+                `La empresa con id: '${id}', no existe ó está deshabilitado.`
+            )
+        }
 
-    if (!exists.user) {
-      debug(
-        `El usuario vinculado con el negocio con id: '${id}', no existe ó está deshabilitado.`,
-        'error'
-      )
-      throw new Error(
-        `El usuario vinculado con el negocio con id: '${id}', no existe ó está deshabilitado.`
-      )
+        if (!exists.user) {
+            debug(
+                `El usuario vinculado con el negocio con id: '${id}', no existe ó está deshabilitado.`,
+                'error'
+            )
+            throw new Error(
+                `El usuario vinculado con el negocio con id: '${id}', no existe ó está deshabilitado.`
+            )
+        }
     }
-  }
 }
 
 /**
@@ -111,26 +113,29 @@ const businessExists = async (id) => {
  * @param {Number} id id of the business to validate
  */
 const serviceTypeExists = async (id) => {
-  if (id.match(/^[0-9a-fA-F]{24}$/)) {
-    // Yes, it's a valid ObjectId, proceed with `findById` call.
-    const exists = await Service_type.findById(id)
-    if (isEmpty(exists)) {
-      debug('¡Se ha intentado modificar una categoría que no existe!', 'error')
-      throw new Error(`El servicio con id: '${id}', no existe.`)
+    if (id.match(/^[0-9a-fA-F]{24}$/)) {
+        // Yes, it's a valid ObjectId, proceed with `findById` call.
+        const exists = await Service_type.findById(id)
+        if (isEmpty(exists)) {
+            debug(
+                '¡Se ha intentado modificar una categoría que no existe!',
+                'error'
+            )
+            throw new Error(`El servicio con id: '${id}', no existe.`)
+        }
     }
-  }
 }
 
 const isObjectIdArray = function (values) {
-  let isObjectIds = true
+    let isObjectIds = true
 
-  values.forEach(function (element) {
-    if (!mongoose.Types.ObjectId.isValid(element)) {
-      isObjectIds = false
-    }
-  })
+    values.forEach(function (element) {
+        if (!mongoose.Types.ObjectId.isValid(element)) {
+            isObjectIds = false
+        }
+    })
 
-  return isObjectIds
+    return isObjectIds
 }
 
 /**
@@ -138,28 +143,32 @@ const isObjectIdArray = function (values) {
  * @param {Date} date Date of the appointment
  */
 const appointmentDateValidator = (date) => {
-  if (!moment(date).isValid()) {
-    throw new Error('La fecha introducida es invalida.')
-  }
+    if (!moment(date).isValid()) {
+        throw new Error('La fecha introducida es invalida.')
+    }
 
-  if (moment(date).isBefore(moment())) {
-    debug('¡La fecha introducida es menor a hoy! '+ moment().diff(date, 'days'), 'error')
-    throw new Error('La fecha introducida debe ser superior a la actual.')
-  }
+    if (moment(date).isBefore(moment())) {
+        debug(
+            '¡La fecha introducida es menor a hoy! ' +
+                moment().diff(date, 'days'),
+            'error'
+        )
+        throw new Error('La fecha introducida debe ser superior a la actual.')
+    }
 
-  return moment(date)
+    return moment(date)
 }
 
 const hashPassword = (pwd) => bcryptjs.hashSync(pwd, bcryptjs.genSaltSync())
 
 module.exports = {
-  isValidRole,
-  emailExists,
-  hashPassword,
-  userExists,
-  serviceTypeExists,
-  businessExists,
-  isObjectIdArray,
-  userWithPhoneExists,
-  appointmentDateValidator,
+    isValidRole,
+    emailExists,
+    hashPassword,
+    userExists,
+    serviceTypeExists,
+    businessExists,
+    isObjectIdArray,
+    userWithPhoneExists,
+    appointmentDateValidator,
 }
